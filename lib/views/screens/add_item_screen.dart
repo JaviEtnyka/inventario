@@ -168,6 +168,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   _categoryId = value;
                 });
               },
+              // Añadir validación
+              validator: (value) {
+                if (value == null) {
+                  return 'Por favor selecciona una categoría';
+                }
+                return null;
+              },
             ),
             SizedBox(height: 16),
             
@@ -195,6 +202,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 setState(() {
                   _locationId = value;
                 });
+              },
+              // Añadir validación
+              validator: (value) {
+                if (value == null) {
+                  return 'Por favor selecciona una ubicación';
+                }
+                return null;
               },
             ),
             SizedBox(height: 16),

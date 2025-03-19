@@ -111,7 +111,6 @@ class ItemController {
         name: item.name,
         description: item.description,
         value: item.value,
-        purchaseDate: item.purchaseDate,
         categoryId: item.categoryId,
         locationId: item.locationId,
         imageUrls: imageUrls.join(','),

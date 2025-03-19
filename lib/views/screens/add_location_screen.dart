@@ -1,72 +1,132 @@
-// controllers/location_controller.dart
+// views/screens/add_location_screen.dart
+import 'package:flutter/material.dart';
+import '../../controllers/location_controller.dart';
 import '../../models/location.dart';
-import '../../services/api_service.dart';
 
-class LocationController {
-  // Obtener todas las ubicaciones
-  Future<List<Location>> getAllLocations() async {
-    try {
-      return await ApiService.getLocations();
-    } catch (e) {
-      print('Error en getAllLocations: $e');
-      throw Exception('Error al obtener las ubicaciones: $e');
-    }
+class AddLocationScreen extends StatefulWidget {
+  @override
+  _AddLocationScreenState createState() => _AddLocationScreenState();
+}
+
+class _AddLocationScreenState extends State<AddLocationScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final LocationController _locationController = LocationController();
+  
+  String _name = '';
+  String _description = '';
+  
+  bool _isLoading = false;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Añadir Ubicación'),
+        backgroundColor: Colors.green,
+      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Nombre
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Nombre',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        prefixIcon: Icon(Icons.place),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingresa un nombre';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _name = value!,
+                    ),
+                    SizedBox(height: 16),
+                    
+                    // Descripción
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Descripción',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        prefixIcon: Icon(Icons.description),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      ),
+                      maxLines: 3,
+                      onSaved: (value) => _description = value ?? '',
+                    ),
+                    SizedBox(height: 24),
+                    
+                    // Botón de guardar
+                    ElevatedButton.icon(
+                      onPressed: _saveLocation,
+                      icon: Icon(Icons.save),
+                      label: Text('Guardar Ubicación'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
   }
   
-  // Obtener una ubicación por ID
-  Future<Location> getLocation(int id) async {
-    try {
-      return await ApiService.getLocationById(id);
-    } catch (e) {
-      print('Error en getLocation: $e');
-      throw Exception('Error al obtener la ubicación: $e');
-    }
-  }
-  
-  // Crear una nueva ubicación
-  Future<int> createLocation(Location location) async {
-    try {
-      return await ApiService.createLocation(location);
-    } catch (e) {
-      print('Error en createLocation: $e');
-      throw Exception('Error al crear la ubicación: $e');
-    }
-  }
-  
-  // Actualizar una ubicación existente
-  Future<void> updateLocation(Location location) async {
-    try {
-      await ApiService.updateLocation(location);
-    } catch (e) {
-      print('Error en updateLocation: $e');
-      throw Exception('Error al actualizar la ubicación: $e');
-    }
-  }
-  
-  // Eliminar una ubicación
-  Future<void> deleteLocation(int id) async {
-    try {
-      await ApiService.deleteLocation(id);
-    } catch (e) {
-      print('Error en deleteLocation: $e');
-      throw Exception('Error al eliminar la ubicación: $e');
-    }
-  }
-  
-  // Buscar ubicaciones por nombre
-  Future<List<Location>> searchLocationsByName(String query) async {
-    try {
-      final locations = await getAllLocations();
-      if (query.isEmpty) return locations;
+  Future<void> _saveLocation() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       
-      query = query.toLowerCase();
-      return locations.where((location) {
-        return location.name.toLowerCase().contains(query) ||
-               location.description.toLowerCase().contains(query);
-      }).toList();
-    } catch (e) {
-      print('Error en searchLocationsByName: $e');
-      throw Exception('Error al buscar ubicaciones: $e');
+      setState(() {
+        _isLoading = true;
+      });
+      
+      try {
+        // Verificar conexión al servidor (opcional)
+        /* 
+        bool isConnected = await ApiService.checkApiConnection();
+        if (!isConnected) {
+          throw Exception('No se puede conectar al servidor. Verifica tu conexión.');
+        }
+        */
+        
+        final location = Location(
+          name: _name,
+          description: _description,
+        );
+        
+        await _locationController.createLocation(location);
+        
+        Navigator.pop(context, true);
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al guardar la ubicación: $e'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 }

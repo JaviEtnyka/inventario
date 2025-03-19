@@ -37,4 +37,15 @@ class CategoryController {
   Future<int> createCategory(Category category) async {
     return await ApiService.createCategory(category);
   }
+
+  // En category_controller.dart
+Future<void> updateCategory(Category category) async {
+  try {
+    print('CategoryController: Actualizando categoría ${category.id} - ${category.name}');
+    await ApiService.updateCategory(category);
+  } catch (e) {
+    print('Error en CategoryController.updateCategory: $e');
+    rethrow;
+  }
+}
 }

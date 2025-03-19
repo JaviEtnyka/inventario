@@ -53,11 +53,10 @@ class Item {
   
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      //'id': id,
       'name': name,
       'description': description,
       'value': value,
-      'purchase_date': purchaseDate,
       'category_id': categoryId,
       'location_id': locationId,
       'image_urls': imageUrls,

@@ -1,7 +1,10 @@
-// views/screens/inventory_screen.dart (actualizado)
+// views/screens/inventory_screen.dart (mejorado)
 import 'package:flutter/material.dart';
 import '../../models/item.dart';
 import '../../controllers/item_controller.dart';
+import '../../config/app_theme.dart';
+import '../widgets/item_list_card.dart';
+import 'item_details_screen.dart';
 
 class InventoryScreen extends StatefulWidget {
   @override
@@ -13,6 +16,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   late Future<List<Item>> _itemsFuture;
   bool _isLoading = false;
   String _errorMessage = '';
+  String _searchQuery = '';
   
   @override
   void initState() {
@@ -27,7 +31,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
     
     try {
-      _itemsFuture = _itemController.getAllItems();
+      if (_searchQuery.isEmpty) {
+        _itemsFuture = _itemController.getAllItems();
+      } else {
+        _itemsFuture = _itemController.searchItems(_searchQuery);
+      }
     } catch (e) {
       setState(() {
         _errorMessage = 'Error al cargar los items: $e';
@@ -41,15 +49,46 @@ class _InventoryScreenState extends State<InventoryScreen> {
   
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await _loadItems();
-      },
-      child: _isLoading 
-        ? Center(child: CircularProgressIndicator())
-        : _errorMessage.isNotEmpty
-          ? _buildErrorView()
-          : _buildItemList(),
+    return Scaffold(
+      body: Column(
+        children: [
+          // Barra de búsqueda
+          _buildSearchBar(),
+          
+          // Resultado del inventario
+          Expanded(
+            child: _isLoading 
+              ? Center(child: CircularProgressIndicator())
+              : _errorMessage.isNotEmpty
+                ? _buildErrorView()
+                : _buildItemList(),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Buscar en el inventario...',
+          prefixIcon: Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.symmetric(vertical: 0),
+        ),
+        onChanged: (value) {
+          setState(() {
+            _searchQuery = value;
+          });
+          _loadItems();
+        },
+      ),
     );
   }
   
@@ -58,11 +97,27 @@ class _InventoryScreenState extends State<InventoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_errorMessage, style: TextStyle(color: Colors.red)),
+          Icon(
+            Icons.error_outline,
+            color: AppTheme.errorColor,
+            size: 48,
+          ),
           SizedBox(height: 16),
-          ElevatedButton(
+          Text(
+            _errorMessage,
+            style: TextStyle(color: AppTheme.errorColor),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 24),
+          ElevatedButton.icon(
             onPressed: _loadItems,
-            child: Text('Reintentar'),
+            icon: Icon(Icons.refresh),
+            label: Text('Reintentar'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.errorColor,
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            ),
           ),
         ],
       ),
@@ -70,76 +125,116 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
   
   Widget _buildItemList() {
-    return FutureBuilder<List<Item>>(
-      future: _itemsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: ${snapshot.error}'),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _loadItems,
-                  child: Text('Reintentar'),
-                ),
-              ],
-            ),
-          );
-        }
-        
-        final items = snapshot.data ?? [];
-        
-        if (items.isEmpty) {
-          return Center(
-            child: Text('No hay items en el inventario'),
-          );
-        }
-        
-        return ListView.builder(
-          padding: EdgeInsets.all(8.0),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-            return Card(
-              elevation: 2,
-              margin: EdgeInsets.only(bottom: 16),
-              child: ListTile(
-                title: Text(
-                  item.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Valor: €${item.value.toStringAsFixed(2)}'),
-                    if (item.categoryName != null) 
-                      Text('Categoría: ${item.categoryName}'),
-                    if (item.locationName != null) 
-                      Text('Ubicación: ${item.locationName}'),
-                  ],
-                ),
-                isThreeLine: true,
-                leading: CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  child: Icon(Icons.inventory, color: Colors.white),
-                ),
-                onTap: () {
-                  // Navegación a la pantalla de detalles (pendiente de implementar)
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Seleccionaste: ${item.name}')),
-                  );
-                },
+    return RefreshIndicator(
+      onRefresh: () async {
+        await _loadItems();
+      },
+      child: FutureBuilder<List<Item>>(
+        future: _itemsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
+                  SizedBox(height: 16),
+                  Text(
+                    'Error: ${snapshot.error}',
+                    style: TextStyle(color: AppTheme.errorColor),
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: _loadItems,
+                    icon: Icon(Icons.refresh),
+                    label: Text('Reintentar'),
+                  ),
+                ],
               ),
             );
-          },
-        );
-      },
+          }
+          
+          final items = snapshot.data ?? [];
+          
+          if (items.isEmpty) {
+            return _buildEmptyState();
+          }
+          
+          // Mostramos el grid de items
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: ListView.builder(
+              physics: AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.only(bottom: 24),
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return ItemListCard(
+                  item: item,
+                  onTap: () => _navigateToDetails(item),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
+  }
+  
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.inventory,
+            size: 72,
+            color: Colors.grey[400],
+          ),
+          SizedBox(height: 16),
+          Text(
+            _searchQuery.isEmpty 
+                ? 'No hay items en el inventario' 
+                : 'No se encontraron resultados para "$_searchQuery"',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 24),
+          if (_searchQuery.isNotEmpty)
+            ElevatedButton.icon(
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                });
+                _loadItems();
+              },
+              icon: Icon(Icons.close),
+              label: Text('Limpiar búsqueda'),
+            ),
+        ],
+      ),
+    );
+  }
+  
+  void _navigateToDetails(Item item) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ItemDetailsScreen(item: item),
+      ),
+    ).then((result) {
+      if (result == true) {
+        setState(() {
+          _loadItems();
+        });
+      }
+    });
   }
 }

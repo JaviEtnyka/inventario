@@ -25,10 +25,16 @@ class Category {
   }
   
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-    };
+  final Map<String, dynamic> data = {
+    'name': name,
+    'description': description,
+  };
+  
+  // Solo añadir el ID si no es nulo (para updates)
+  if (id != null) {
+    data['id'] = id;
   }
+  
+  return data;
+}
 }

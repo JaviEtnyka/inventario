@@ -1,99 +1,300 @@
-// views/screens/home_screen.dart (actualizado)
+// views/screens/home_screen.dart (con ajustes)
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'inventory_screen.dart';
 import 'categories_screen.dart';
 import 'locations_screen.dart';
+import 'settings_screen.dart';
 import 'add_item_screen.dart';
 import 'add_category_screen.dart';
 import 'add_location_screen.dart';
+import '../../config/app_theme.dart';
 import '../../config/app_config.dart';
+import '../../controllers/item_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  bool _isSearchVisible = false;
+  String _searchQuery = '';
+  final ItemController _itemController = ItemController();
+  double _totalValue = 0.0;
+  bool _isLoadingValue = true;
   
-  final List<Widget> _screens = [
-    InventoryScreen(),
-    CategoriesScreen(),
-    LocationsScreen(),
-  ];
+  late List<Widget> _screens;
   
   final List<String> _titles = [
     'Inventario',
     'Categorías',
     'Ubicaciones',
+    'Ajustes',
   ];
   
   final List<IconData> _icons = [
     Icons.inventory,
     Icons.category,
     Icons.place,
+    Icons.settings,
   ];
   
   final List<Color> _colors = [
-    Colors.blue,
-    Colors.orange,
-    Colors.green,
+    AppTheme.inventoryColor,
+    AppTheme.categoryColor,
+    AppTheme.locationColor,
+    Colors.grey[700]!,
   ];
+  
+  final TextEditingController _searchController = TextEditingController();
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadTotalValue();
+    
+    // Inicializar las pantallas
+    _screens = [
+      InventoryScreen(),
+      CategoriesScreen(),
+      LocationsScreen(),
+      SettingsScreen(),
+    ];
+  }
+  
+  Future<void> _loadTotalValue() async {
+    setState(() {
+      _isLoadingValue = true;
+    });
+    
+    try {
+      final value = await _itemController.getTotalInventoryValue();
+      setState(() {
+        _totalValue = value;
+        _isLoadingValue = false;
+      });
+    } catch (e) {
+      print('Error al cargar valor total: $e');
+      setState(() {
+        _isLoadingValue = false;
+      });
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
+    // Color de la barra de estado basado en el índice seleccionado
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+    
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
-        backgroundColor: _colors[_selectedIndex],
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Búsqueda no implementada aún')),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.info_outline),
-            onPressed: () {
-              _showAppInfo(context);
-            },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top + 60),
+        child: _buildCustomAppBar(),
+      ),
+      body: SafeArea(
+        top: false,
+        child: _screens[_selectedIndex],
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+      floatingActionButton: _shouldShowFab() ? _buildFloatingActionButton() : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+  
+  bool _shouldShowFab() {
+    // No mostrar FAB en la pantalla de Ajustes
+    return _selectedIndex < 3;
+  }
+  
+  Widget _buildCustomAppBar() {
+    return Container(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      decoration: BoxDecoration(
+        color: _colors[_selectedIndex],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: Offset(0, 2),
           ),
         ],
       ),
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        items: List.generate(
-          _titles.length,
-          (index) => BottomNavigationBarItem(
-            icon: Icon(_icons[index]),
-            label: _titles[index],
-          ),
+      child: Container(
+        height: 60,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            // Título
+            if (!_isSearchVisible)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _titles[_selectedIndex],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (_selectedIndex == 0 && !_isLoadingValue)
+                      Text(
+                        'Valor total: €${_totalValue.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 14,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            
+            // Campo de búsqueda (visible solo cuando se activa)
+            if (_isSearchVisible)
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Buscar...',
+                    hintStyle: TextStyle(color: Colors.white70),
+                    border: InputBorder.none,
+                    prefixIcon: Icon(Icons.search, color: Colors.white70),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.close, color: Colors.white70),
+                      onPressed: () {
+                        setState(() {
+                          _isSearchVisible = false;
+                          _searchQuery = '';
+                          _searchController.clear();
+                        });
+                      },
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                    });
+                  },
+                ),
+              ),
+            
+            // Iconos de acción
+            if (!_isSearchVisible) ...[
+              // Solo mostrar búsqueda en pantallas relevantes (no en Ajustes)
+              if (_selectedIndex < 3)
+                IconButton(
+                  icon: Icon(Icons.search, color: Colors.white),
+                  onPressed: () {
+                    setState(() {
+                      _isSearchVisible = true;
+                    });
+                  },
+                ),
+              IconButton(
+                icon: Icon(Icons.info_outline, color: Colors.white),
+                onPressed: () {
+                  _showAppInfo(context);
+                },
+              ),
+            ],
+          ],
         ),
-        selectedItemColor: _colors[_selectedIndex],
-        unselectedItemColor: Colors.grey,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _navigateToAddScreen(context);
-        },
-        backgroundColor: _colors[_selectedIndex],
-        child: Icon(Icons.add),
-        tooltip: 'Añadir ${_getSingularTitle(_selectedIndex)}',
+    );
+  }
+  
+  Widget _buildBottomNavigationBar() {
+    return BottomAppBar(
+      notchMargin: 8,
+      elevation: 8,
+      shape: CircularNotchedRectangle(),
+      color: Colors.white,
+      child: Container(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            // Botón Inventario
+            _buildNavItem(0, _icons[0], _titles[0]),
+            
+            // Botón Categorías
+            _buildNavItem(1, _icons[1], _titles[1]),
+            
+            // Espacio para el botón flotante
+            SizedBox(width: 40),
+            
+            // Botón Ubicaciones
+            _buildNavItem(2, _icons[2], _titles[2]),
+            
+            // Botón Ajustes
+            _buildNavItem(3, _icons[3], _titles[3]),
+          ],
+        ),
       ),
+    );
+  }
+  
+  Widget _buildNavItem(int index, IconData icon, String label, {bool isDisabled = false}) {
+    final isSelected = _selectedIndex == index;
+    final color = isDisabled 
+        ? Colors.grey.withOpacity(0.5) 
+        : (isSelected ? _colors[index % _colors.length] : Colors.grey);
+    
+    return Expanded(
+      child: InkWell(
+        onTap: isDisabled 
+            ? null 
+            : () {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        _navigateToAddScreen(context);
+      },
+      backgroundColor: _colors[_selectedIndex],
+      child: Icon(Icons.add),
+      tooltip: 'Añadir ${_getSingularTitle(_selectedIndex)}',
+      elevation: 4,
     );
   }
   
   // Obtener el título en singular
   String _getSingularTitle(int index) {
+    if (index >= _titles.length - 1) return ''; // No singular para "Ajustes"
+    
     String title = _titles[index];
     // Quitar la 's' final para obtener el singular
     return title.toLowerCase().substring(0, title.length - 1);
@@ -110,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
         screen = AddCategoryScreen();
         break;
       case 2:
-        screen = AddCategoryScreen() ;
+        screen = AddLocationScreen();
         break;
       default:
         screen = AddItemScreen();
@@ -122,12 +323,16 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(builder: (context) => screen),
     ).then((result) {
       if (result == true) {
-        // Esto forzará la reconstrucción de toda la pantalla
+        // Recargar la pantalla actual
         setState(() {
-          // El Widget build volverá a ejecutarse, y las pantallas se actualizarán
           _screens[0] = InventoryScreen();
           _screens[1] = CategoriesScreen();
           _screens[2] = LocationsScreen();
+          
+          // Si estamos en la pantalla de inventario, también actualizamos el valor total
+          if (_selectedIndex == 0) {
+            _loadTotalValue();
+          }
         });
       }
     });
@@ -137,22 +342,49 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppConfig.appName),
+        title: Text(
+          AppConfig.appName,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Versión: ${AppConfig.appVersion}'),
+            ListTile(
+              leading: Icon(Icons.info, color: AppTheme.primaryColor),
+              title: Text('Versión'),
+              subtitle: Text(AppConfig.appVersion),
+              contentPadding: EdgeInsets.zero,
+            ),
+            Divider(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                'Una aplicación para gestionar el inventario de los objetos de valor de tu hogar.',
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
             SizedBox(height: 16),
-            Text('Una aplicación para gestionar el inventario de los objetos de valor de tu hogar.'),
-            SizedBox(height: 16),
-            Text('Desarrollada con Flutter.'),
+            Text(
+              'Desarrollada con Flutter',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('Cerrar'),
+            style: TextButton.styleFrom(
+              foregroundColor: AppTheme.primaryColor,
+            ),
           ),
         ],
       ),

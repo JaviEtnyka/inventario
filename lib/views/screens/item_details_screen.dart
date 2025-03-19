@@ -1,8 +1,11 @@
-// views/screens/item_details_screen.dart
+// views/screens/item_details_screen.dart (mejorado)
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/item.dart';
 import '../../controllers/item_controller.dart';
+import '../../config/app_theme.dart';
+import '../widgets/custom_card.dart';
+import '../widgets/custom_button.dart';
 import 'edit_item_screen.dart';
 
 class ItemDetailsScreen extends StatelessWidget {
@@ -26,7 +29,7 @@ class ItemDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detalles'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
             icon: Icon(Icons.edit),
@@ -49,62 +52,136 @@ class ItemDetailsScreen extends StatelessWidget {
             
             SizedBox(height: 24),
             
-            // Nombre del item
-            Text(
-              item.name,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            
-            SizedBox(height: 16),
-            
-            // Valor
-            Text(
-              'Valor: ${currencyFormat.format(item.value)}',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            
-            SizedBox(height: 16),
-            
-            // Categoría y ubicación
-            if (item.categoryName != null)
-              _buildInfoRow(Icons.category, 'Categoría', item.categoryName!),
-            
-            if (item.locationName != null)
-              _buildInfoRow(Icons.place, 'Ubicación', item.locationName!),
-            
-            SizedBox(height: 16),
-            
-            // Descripción
-            Text(
-              'Descripción:',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              item.description,
-              style: TextStyle(fontSize: 16),
+            // Nombre y valor
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    item.name,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                  ),
+                  child: Text(
+                    currencyFormat.format(item.value),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
             ),
             
             SizedBox(height: 24),
             
-            // Fecha de registro
-            if (item.dateAdded != null)
+            // Categoría y ubicación
+            Row(
+              children: [
+                Expanded(
+                  child: InfoCard(
+                    title: 'Categoría',
+                    value: item.categoryName ?? 'Sin categoría',
+                    icon: Icons.category,
+                    iconColor: AppTheme.categoryColor,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: InfoCard(
+                    title: 'Ubicación',
+                    value: item.locationName ?? 'Sin ubicación',
+                    icon: Icons.place,
+                    iconColor: AppTheme.locationColor,
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 24),
+            
+            // Descripción
+            if (item.description.isNotEmpty) ...[
               Text(
-                'Fecha de registro: ${_formatDate(item.dateAdded!)}',
+                'Descripción',
                 style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(height: 8),
+              CustomCard(
+                child: Text(
+                  item.description,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              SizedBox(height: 24),
+            ],
+            
+            // Información adicional
+            Text(
+              'Información Adicional',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            CustomCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (item.purchaseDate != null)
+                    _buildInfoRow('Fecha de compra', _formatDate(item.purchaseDate!)),
+                  
+                  if (item.dateAdded != null)
+                    _buildInfoRow('Fecha de registro', _formatDate(item.dateAdded!)),
+                  
+                  if (item.lastUpdated != null)
+                    _buildInfoRow('Última actualización', _formatDate(item.lastUpdated!)),
+                  
+                  _buildInfoRow('ID', '#${item.id}'),
+                ],
+              ),
+            ),
+            
+            SizedBox(height: 32),
+            
+            // Botones de acción
+            Row(
+              children: [
+                Expanded(
+                  child: CustomButton(
+                    text: 'Editar',
+                    icon: Icons.edit,
+                    onPressed: () => _navigateToEditScreen(context),
+                    color: AppTheme.secondaryColor,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: CustomButton(
+                    text: 'Eliminar',
+                    icon: Icons.delete,
+                    onPressed: () => _showDeleteConfirmation(context),
+                    color: AppTheme.errorColor,
+                    isOutlined: true,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -114,57 +191,72 @@ class ItemDetailsScreen extends StatelessWidget {
   // Construir galería de imágenes
   Widget _buildImageGallery(List<String> imageUrls) {
     return Container(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: imageUrls.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(right: 8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imageUrls[index],
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 200,
-                    height: 200,
-                    color: Colors.grey[300],
-                    child: Icon(
-                      Icons.broken_image,
-                      size: 40,
+      height: 240,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+        boxShadow: [AppTheme.cardShadow],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+        child: PageView.builder(
+          itemCount: imageUrls.length,
+          itemBuilder: (context, index) {
+            return Image.network(
+              imageUrls[index],
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: Colors.grey[300],
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.broken_image,
+                          size: 40,
+                          color: Colors.grey[700],
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Error al cargar imagen',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
   
   // Construir fila de información
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Colors.grey[700]),
-          SizedBox(width: 8),
-          Text(
-            '$label: ',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+          SizedBox(
+            width: 150,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[700],
+              ),
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ],
       ),
@@ -202,14 +294,21 @@ class ItemDetailsScreen extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Text('Confirmar eliminación'),
         content: Text('¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text('Cancelar'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () => _deleteItem(context),
-            child: Text('Eliminar', style: TextStyle(color: Colors.red)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.errorColor,
+              foregroundColor: Colors.white,
+            ),
+            child: Text('Eliminar'),
           ),
         ],
       ),
@@ -221,11 +320,23 @@ class ItemDetailsScreen extends StatelessWidget {
     try {
       await _itemController.deleteItem(item.id!);
       Navigator.pop(context); // Cerrar diálogo
+      
+      // Mostrar snackbar de confirmación
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Item eliminado correctamente'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      
       Navigator.pop(context, true); // Volver a la pantalla anterior con resultado positivo
     } catch (e) {
       Navigator.pop(context); // Cerrar diálogo
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al eliminar el item: $e')),
+        SnackBar(
+          content: Text('Error al eliminar el item: $e'),
+          backgroundColor: AppTheme.errorColor,
+        ),
       );
     }
   }
