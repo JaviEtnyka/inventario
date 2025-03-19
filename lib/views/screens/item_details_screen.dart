@@ -9,7 +9,7 @@ class ItemDetailsScreen extends StatelessWidget {
   final Item item;
   final ItemController _itemController = ItemController();
   
-  ItemDetailsScreen({required this.item});
+  ItemDetailsScreen({Key? key, required this.item}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -25,21 +25,21 @@ class ItemDetailsScreen extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles'),
+        title: const Text('Detalles'),
         backgroundColor: Colors.blue,
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () => _navigateToEditScreen(context),
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () => _showDeleteConfirmation(context),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,29 +47,29 @@ class ItemDetailsScreen extends StatelessWidget {
             if (imageUrls.isNotEmpty)
               _buildImageGallery(imageUrls),
             
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Nombre del item
             Text(
               item.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Valor
             Text(
               'Valor: ${currencyFormat.format(item.value)}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
             ),
             
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Categoría y ubicación
             if (item.categoryName != null)
@@ -78,29 +78,29 @@ class ItemDetailsScreen extends StatelessWidget {
             if (item.locationName != null)
               _buildInfoRow(Icons.place, 'Ubicación', item.locationName!),
             
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Descripción
-            Text(
+            const Text(
               'Descripción:',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               item.description,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Fecha de registro
             if (item.dateAdded != null)
               Text(
                 'Fecha de registro: ${_formatDate(item.dateAdded!)}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
                 ),
@@ -113,14 +113,14 @@ class ItemDetailsScreen extends StatelessWidget {
   
   // Construir galería de imágenes
   Widget _buildImageGallery(List<String> imageUrls) {
-    return Container(
+    return SizedBox(
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: imageUrls.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
@@ -133,7 +133,7 @@ class ItemDetailsScreen extends StatelessWidget {
                     width: 200,
                     height: 200,
                     color: Colors.grey[300],
-                    child: Icon(
+                    child: const Icon(
                       Icons.broken_image,
                       size: 40,
                     ),
@@ -150,21 +150,21 @@ class ItemDetailsScreen extends StatelessWidget {
   // Construir fila de información
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.grey[700]),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(
             '$label: ',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),
@@ -200,16 +200,16 @@ class ItemDetailsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirmar eliminación'),
-        content: Text('¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.'),
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
+            child: const Text('Cancelar'),
           ),
           TextButton(
             onPressed: () => _deleteItem(context),
-            child: Text('Eliminar', style: TextStyle(color: Colors.red)),
+            child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

@@ -11,6 +11,8 @@ import '../../models/location.dart';
 import '../widgets/image_picker_widget.dart';
 
 class AddItemScreen extends StatefulWidget {
+  const AddItemScreen({Key? key}) : super(key: key);
+
   @override
   _AddItemScreenState createState() => _AddItemScreenState();
 }
@@ -67,11 +69,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Añadir Item'),
+        title: const Text('Añadir Item'),
         backgroundColor: Colors.blue,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _errorMessage.isNotEmpty
               ? _buildErrorView()
               : _buildForm(),
@@ -83,11 +85,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_errorMessage, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 16),
+          Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadCategoriesAndLocations,
-            child: Text('Reintentar'),
+            child: const Text('Reintentar'),
           ),
         ],
       ),
@@ -96,7 +98,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
   
   Widget _buildForm() {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Form(
         key: _formKey,
         child: Column(
@@ -104,7 +106,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
           children: [
             // Nombre
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nombre',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.inventory),
@@ -117,16 +119,16 @@ class _AddItemScreenState extends State<AddItemScreen> {
               },
               onSaved: (value) => _name = value!,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Valor
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Valor (€)',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.euro),
               ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
               ],
@@ -141,18 +143,18 @@ class _AddItemScreenState extends State<AddItemScreen> {
               },
               onSaved: (value) => _value = double.parse(value!),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Categoría
             DropdownButtonFormField<int?>(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Categoría',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.category),
               ),
               value: _categoryId,
               items: [
-                DropdownMenuItem<int?>(
+                const DropdownMenuItem<int?>(
                   value: null,
                   child: Text('Sin categoría'),
                 ),
@@ -169,18 +171,18 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 });
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Ubicación
             DropdownButtonFormField<int?>(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Ubicación',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.place),
               ),
               value: _locationId,
               items: [
-                DropdownMenuItem<int?>(
+                const DropdownMenuItem<int?>(
                   value: null,
                   child: Text('Sin ubicación'),
                 ),
@@ -197,11 +199,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 });
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Descripción
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Descripción',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.description),
@@ -209,7 +211,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
               maxLines: 3,
               onSaved: (value) => _description = value ?? '',
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Selector de imágenes
             ImagePickerWidget(
@@ -220,17 +222,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 });
               },
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Botón de guardar
             ElevatedButton.icon(
               onPressed: _saveItem,
-              icon: Icon(Icons.save),
-              label: Text('Guardar Item'),
+              icon: const Icon(Icons.save),
+              label: const Text('Guardar Item'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
           ],

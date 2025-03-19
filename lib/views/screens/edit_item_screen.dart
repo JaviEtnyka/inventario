@@ -13,7 +13,7 @@ import '../widgets/image_picker_widget.dart';
 class EditItemScreen extends StatefulWidget {
   final Item item;
   
-  EditItemScreen({required this.item});
+  const EditItemScreen({Key? key, required this.item}) : super(key: key);
   
   @override
   _EditItemScreenState createState() => _EditItemScreenState();
@@ -82,11 +82,11 @@ class _EditItemScreenState extends State<EditItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Item'),
+        title: const Text('Editar Item'),
         backgroundColor: Colors.blue,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _errorMessage.isNotEmpty
               ? _buildErrorView()
               : _buildForm(),
@@ -98,11 +98,11 @@ class _EditItemScreenState extends State<EditItemScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_errorMessage, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 16),
+          Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadCategoriesAndLocations,
-            child: Text('Reintentar'),
+            child: const Text('Reintentar'),
           ),
         ],
       ),
@@ -111,7 +111,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   
   Widget _buildForm() {
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Form(
         key: _formKey,
         child: Column(
@@ -120,7 +120,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
             // Nombre
             TextFormField(
               initialValue: _name,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nombre',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.inventory),
@@ -137,17 +137,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 }
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Valor
             TextFormField(
               initialValue: _value.toString(),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Valor (€)',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.euro),
               ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
               ],
@@ -166,19 +166,19 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 }
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Categoría
             DropdownButtonFormField<int?>(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Categoría',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.category),
               ),
               value: _categoryId,
-              hint: Text('Selecciona una categoría'),
+              hint: const Text('Selecciona una categoría'),
               items: [
-                DropdownMenuItem<int?>(
+                const DropdownMenuItem<int?>(
                   value: null,
                   child: Text('Sin categoría'),
                 ),
@@ -195,19 +195,19 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 });
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Ubicación
             DropdownButtonFormField<int?>(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Ubicación',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.place),
               ),
               value: _locationId,
-              hint: Text('Selecciona una ubicación'),
+              hint: const Text('Selecciona una ubicación'),
               items: [
-                DropdownMenuItem<int?>(
+                const DropdownMenuItem<int?>(
                   value: null,
                   child: Text('Sin ubicación'),
                 ),
@@ -224,12 +224,12 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 });
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             
             // Descripción
             TextFormField(
               initialValue: _description,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Descripción',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.description),
@@ -239,20 +239,20 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 _description = value ?? '';
               },
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Imágenes existentes
             if (widget.item.getImageUrlsList().isNotEmpty) ...[
-              Text(
+              const Text(
                 'Imágenes existentes:',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               _buildExistingImages(),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
             
             // Selector de nuevas imágenes
@@ -264,17 +264,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
                 });
               },
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Botón de guardar
             ElevatedButton.icon(
               onPressed: _updateItem,
-              icon: Icon(Icons.save),
-              label: Text('Guardar Cambios'),
+              icon: const Icon(Icons.save),
+              label: const Text('Guardar Cambios'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
           ],
@@ -293,7 +293,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
         itemCount: imageUrls.length,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.only(right: 8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
@@ -306,7 +306,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     width: 120,
                     height: 120,
                     color: Colors.grey[300],
-                    child: Icon(Icons.broken_image),
+                    child: const Icon(Icons.broken_image),
                   );
                 },
               ),

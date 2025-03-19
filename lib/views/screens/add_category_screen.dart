@@ -4,6 +4,8 @@ import '../../controllers/category_controller.dart';
 import '../../models/category.dart';
 
 class AddCategoryScreen extends StatefulWidget {
+  const AddCategoryScreen({Key? key}) : super(key: key);
+
   @override
   _AddCategoryScreenState createState() => _AddCategoryScreenState();
 }
@@ -21,13 +23,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Añadir Categoría'),
+        title: const Text('Añadir Categoría'),
         backgroundColor: Colors.orange,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -35,7 +37,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                   children: [
                     // Nombre
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Nombre',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.category),
@@ -48,11 +50,11 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       },
                       onSaved: (value) => _name = value!,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     
                     // Descripción
                     TextFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Descripción',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.description),
@@ -60,17 +62,17 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                       maxLines: 3,
                       onSaved: (value) => _description = value ?? '',
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     
                     // Botón de guardar
                     ElevatedButton.icon(
                       onPressed: _saveCategory,
-                      icon: Icon(Icons.save),
-                      label: Text('Guardar Categoría'),
+                      icon: const Icon(Icons.save),
+                      label: const Text('Guardar Categoría'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
                   ],

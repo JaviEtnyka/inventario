@@ -5,10 +5,11 @@ import 'categories_screen.dart';
 import 'locations_screen.dart';
 import 'add_item_screen.dart';
 import 'add_category_screen.dart';
-import 'add_location_screen.dart';
 import '../../config/app_config.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -17,9 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   
   final List<Widget> _screens = [
-    InventoryScreen(),
-    CategoriesScreen(),
-    LocationsScreen(),
+    const InventoryScreen(),
+    const CategoriesScreen(),
+    const LocationsScreen(),
   ];
   
   final List<String> _titles = [
@@ -48,15 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: _colors[_selectedIndex],
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Búsqueda no implementada aún')),
+                const SnackBar(content: Text('Búsqueda no implementada aún')),
               );
             },
           ),
           IconButton(
-            icon: Icon(Icons.info_outline),
+            icon: const Icon(Icons.info_outline),
             onPressed: () {
               _showAppInfo(context);
             },
@@ -86,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToAddScreen(context);
         },
         backgroundColor: _colors[_selectedIndex],
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         tooltip: 'Añadir ${_getSingularTitle(_selectedIndex)}',
       ),
     );
@@ -104,16 +105,16 @@ class _HomeScreenState extends State<HomeScreen> {
     
     switch (_selectedIndex) {
       case 0:
-        screen = AddItemScreen();
+        screen = const AddItemScreen();
         break;
       case 1:
-        screen = AddCategoryScreen();
+        screen = const AddCategoryScreen();
         break;
       case 2:
-        screen = AddCategoryScreen() ;
+        screen = const AddCategoryScreen() ;
         break;
       default:
-        screen = AddItemScreen();
+        screen = const AddItemScreen();
         break;
     }
     
@@ -125,9 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
         // Esto forzará la reconstrucción de toda la pantalla
         setState(() {
           // El Widget build volverá a ejecutarse, y las pantallas se actualizarán
-          _screens[0] = InventoryScreen();
-          _screens[1] = CategoriesScreen();
-          _screens[2] = LocationsScreen();
+          _screens[0] = const InventoryScreen();
+          _screens[1] = const CategoriesScreen();
+          _screens[2] = const LocationsScreen();
         });
       }
     });
@@ -137,8 +138,8 @@ class _HomeScreenState extends State<HomeScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppConfig.appName),
-        content: Column(
+        title: const Text(AppConfig.appName),
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -152,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cerrar'),
+            child: const Text('Cerrar'),
           ),
         ],
       ),

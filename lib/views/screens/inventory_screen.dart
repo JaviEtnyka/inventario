@@ -4,6 +4,8 @@ import '../../models/item.dart';
 import '../../controllers/item_controller.dart';
 
 class InventoryScreen extends StatefulWidget {
+  const InventoryScreen({Key? key}) : super(key: key);
+
   @override
   _InventoryScreenState createState() => _InventoryScreenState();
 }
@@ -46,7 +48,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         await _loadItems();
       },
       child: _isLoading 
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : _errorMessage.isNotEmpty
           ? _buildErrorView()
           : _buildItemList(),
@@ -58,11 +60,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_errorMessage, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 16),
+          Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadItems,
-            child: Text('Reintentar'),
+            child: const Text('Reintentar'),
           ),
         ],
       ),
@@ -74,7 +76,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       future: _itemsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         
         if (snapshot.hasError) {
@@ -83,10 +85,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Error: ${snapshot.error}'),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _loadItems,
-                  child: Text('Reintentar'),
+                  child: const Text('Reintentar'),
                 ),
               ],
             ),
@@ -96,23 +98,23 @@ class _InventoryScreenState extends State<InventoryScreen> {
         final items = snapshot.data ?? [];
         
         if (items.isEmpty) {
-          return Center(
+          return const Center(
             child: Text('No hay items en el inventario'),
           );
         }
         
         return ListView.builder(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           itemCount: items.length,
           itemBuilder: (context, index) {
             final item = items[index];
             return Card(
               elevation: 2,
-              margin: EdgeInsets.only(bottom: 16),
+              margin: const EdgeInsets.only(bottom: 16),
               child: ListTile(
                 title: Text(
                   item.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +127,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ],
                 ),
                 isThreeLine: true,
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: Icon(Icons.inventory, color: Colors.white),
                 ),

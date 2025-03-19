@@ -14,9 +14,16 @@ class ApiService {
   static Future<List<Item>> getItems() async {
     try {
       print('Obteniendo items desde: ${ApiConfig.readItems}');
-      final response = await http.get(Uri.parse(ApiConfig.readItems));
+      final response = await http.get(
+        Uri.parse(ApiConfig.readItems),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
       
       print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedData = json.decode(response.body);
@@ -34,6 +41,8 @@ class ApiService {
         print('No se encontraron items (404)');
         return [];
       } else {
+        print('Error HTTP: ${response.statusCode}');
+        print('Respuesta: ${response.body}');
         throw Exception('Error al obtener los items: ${response.statusCode}');
       }
     } catch (e) {
@@ -46,7 +55,17 @@ class ApiService {
   /// Obtiene un item por su ID
   static Future<Item> getItemById(int id) async {
     try {
-      final response = await http.get(Uri.parse('${ApiConfig.readOneItem}?id=$id'));
+      print('Obteniendo item con ID $id');
+      final response = await http.get(
+        Uri.parse('${ApiConfig.readOneItem}?id=$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 200) {
         return Item.fromJson(json.decode(response.body));
@@ -62,11 +81,20 @@ class ApiService {
   /// Crea un nuevo item
   static Future<int> createItem(Item item) async {
     try {
+      print('Creando nuevo item: ${item.name}');
+      print('JSON enviado: ${json.encode(item.toJson())}');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.createItem),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(item.toJson())
       );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -76,7 +104,7 @@ class ApiService {
           return 0; // Si no hay ID, devolvemos 0 temporalmente
         }
       } else {
-        throw Exception('Error al crear el item: ${response.statusCode}');
+        throw Exception('Error al crear el item: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en createItem: $e');
@@ -87,14 +115,23 @@ class ApiService {
   /// Actualiza un item existente
   static Future<void> updateItem(Item item) async {
     try {
+      print('Actualizando item ID ${item.id}');
+      print('JSON enviado: ${json.encode(item.toJson())}');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.updateItem),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(item.toJson())
       );
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode != 200) {
-        throw Exception('Error al actualizar el item: ${response.statusCode}');
+        throw Exception('Error al actualizar el item: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en updateItem: $e');
@@ -105,14 +142,22 @@ class ApiService {
   /// Elimina un item por su ID
   static Future<void> deleteItem(int id) async {
     try {
+      print('Eliminando item ID $id');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.deleteItem),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode({'id': id})
       );
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode != 200) {
-        throw Exception('Error al eliminar el item: ${response.statusCode}');
+        throw Exception('Error al eliminar el item: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en deleteItem: $e');
@@ -126,7 +171,16 @@ class ApiService {
   static Future<List<Category>> getCategories() async {
     try {
       print('Obteniendo categorías desde: ${ApiConfig.readCategories}');
-      final response = await http.get(Uri.parse(ApiConfig.readCategories));
+      final response = await http.get(
+        Uri.parse(ApiConfig.readCategories),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedData = json.decode(response.body);
@@ -144,7 +198,7 @@ class ApiService {
         print('No se encontraron categorías (404)');
         return [];
       } else {
-        throw Exception('Error al obtener las categorías: ${response.statusCode}');
+        throw Exception('Error al obtener las categorías: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Excepción en getCategories: $e');
@@ -155,12 +209,22 @@ class ApiService {
   /// Obtiene una categoría por su ID
   static Future<Category> getCategoryById(int id) async {
     try {
-      final response = await http.get(Uri.parse('${ApiConfig.readOneCategory}?id=$id'));
+      print('Obteniendo categoría con ID $id');
+      final response = await http.get(
+        Uri.parse('${ApiConfig.readOneCategory}?id=$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 200) {
         return Category.fromJson(json.decode(response.body));
       } else {
-        throw Exception('Error al obtener la categoría: ${response.statusCode}');
+        throw Exception('Error al obtener la categoría: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en getCategoryById: $e');
@@ -171,11 +235,20 @@ class ApiService {
   /// Crea una nueva categoría
   static Future<int> createCategory(Category category) async {
     try {
+      print('Creando nueva categoría: ${category.name}');
+      print('JSON enviado: ${json.encode(category.toJson())}');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.createCategory),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(category.toJson())
       );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -185,7 +258,7 @@ class ApiService {
           return 0;
         }
       } else {
-        throw Exception('Error al crear la categoría: ${response.statusCode}');
+        throw Exception('Error al crear la categoría: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en createCategory: $e');
@@ -196,14 +269,23 @@ class ApiService {
   /// Actualiza una categoría existente
   static Future<void> updateCategory(Category category) async {
     try {
+      print('Actualizando categoría ID ${category.id}');
+      print('JSON enviado: ${json.encode(category.toJson())}');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.updateCategory),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(category.toJson())
       );
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode != 200) {
-        throw Exception('Error al actualizar la categoría: ${response.statusCode}');
+        throw Exception('Error al actualizar la categoría: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en updateCategory: $e');
@@ -214,14 +296,22 @@ class ApiService {
   /// Elimina una categoría por su ID
   static Future<void> deleteCategory(int id) async {
     try {
+      print('Eliminando categoría ID $id');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.deleteCategory),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode({'id': id})
       );
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode != 200) {
-        throw Exception('Error al eliminar la categoría: ${response.statusCode}');
+        throw Exception('Error al eliminar la categoría: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en deleteCategory: $e');
@@ -235,7 +325,16 @@ class ApiService {
   static Future<List<Location>> getLocations() async {
     try {
       print('Obteniendo ubicaciones desde: ${ApiConfig.readLocations}');
-      final response = await http.get(Uri.parse(ApiConfig.readLocations));
+      final response = await http.get(
+        Uri.parse(ApiConfig.readLocations),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedData = json.decode(response.body);
@@ -253,7 +352,7 @@ class ApiService {
         print('No se encontraron ubicaciones (404)');
         return [];
       } else {
-        throw Exception('Error al obtener las ubicaciones: ${response.statusCode}');
+        throw Exception('Error al obtener las ubicaciones: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Excepción en getLocations: $e');
@@ -264,12 +363,22 @@ class ApiService {
   /// Obtiene una ubicación por su ID
   static Future<Location> getLocationById(int id) async {
     try {
-      final response = await http.get(Uri.parse('${ApiConfig.readOneLocation}?id=$id'));
+      print('Obteniendo ubicación con ID $id');
+      final response = await http.get(
+        Uri.parse('${ApiConfig.readOneLocation}?id=$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 200) {
         return Location.fromJson(json.decode(response.body));
       } else {
-        throw Exception('Error al obtener la ubicación: ${response.statusCode}');
+        throw Exception('Error al obtener la ubicación: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en getLocationById: $e');
@@ -280,11 +389,20 @@ class ApiService {
   /// Crea una nueva ubicación
   static Future<int> createLocation(Location location) async {
     try {
+      print('Creando nueva ubicación: ${location.name}');
+      print('JSON enviado: ${json.encode(location.toJson())}');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.createLocation),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(location.toJson())
       );
+      
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
       
       if (response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -294,7 +412,7 @@ class ApiService {
           return 0;
         }
       } else {
-        throw Exception('Error al crear la ubicación: ${response.statusCode}');
+        throw Exception('Error al crear la ubicación: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en createLocation: $e');
@@ -305,14 +423,23 @@ class ApiService {
   /// Actualiza una ubicación existente
   static Future<void> updateLocation(Location location) async {
     try {
+      print('Actualizando ubicación ID ${location.id}');
+      print('JSON enviado: ${json.encode(location.toJson())}');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.updateLocation),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode(location.toJson())
       );
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode != 200) {
-        throw Exception('Error al actualizar la ubicación: ${response.statusCode}');
+        throw Exception('Error al actualizar la ubicación: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en updateLocation: $e');
@@ -323,14 +450,22 @@ class ApiService {
   /// Elimina una ubicación por su ID
   static Future<void> deleteLocation(int id) async {
     try {
+      print('Eliminando ubicación ID $id');
+      
       final response = await http.post(
         Uri.parse(ApiConfig.deleteLocation),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body: json.encode({'id': id})
       );
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode != 200) {
-        throw Exception('Error al eliminar la ubicación: ${response.statusCode}');
+        throw Exception('Error al eliminar la ubicación: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en deleteLocation: $e');
@@ -343,6 +478,8 @@ class ApiService {
   /// Sube una sola imagen al servidor
   static Future<String> uploadImage(File imageFile) async {
     try {
+      print('Subiendo imagen: ${imageFile.path}');
+      
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(ApiConfig.uploadImage),
@@ -357,11 +494,14 @@ class ApiService {
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         return responseData['imageUrl'];
       } else {
-        throw Exception('Error al subir la imagen: ${response.statusCode}');
+        throw Exception('Error al subir la imagen: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en uploadImage: $e');
@@ -372,6 +512,8 @@ class ApiService {
   /// Sube múltiples imágenes al servidor
   static Future<List<String>> uploadMultipleImages(List<File> imageFiles) async {
     try {
+      print('Subiendo ${imageFiles.length} imágenes');
+      
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(ApiConfig.uploadMultipleImages),
@@ -388,11 +530,14 @@ class ApiService {
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
       
+      print('Respuesta HTTP: ${response.statusCode}');
+      print('Cuerpo de la respuesta: ${response.body}');
+      
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         return List<String>.from(responseData['imageUrls']);
       } else {
-        throw Exception('Error al subir las imágenes: ${response.statusCode}');
+        throw Exception('Error al subir las imágenes: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error en uploadMultipleImages: $e');
@@ -406,11 +551,13 @@ class ApiService {
   /// Comprueba si la API está disponible
   static Future<bool> checkApiConnection() async {
     try {
+      print('Comprobando conexión a la API: ${ApiConfig.baseUrl}');
       final response = await http.get(
         Uri.parse(ApiConfig.baseUrl),
         headers: {'Connection': 'close'},
       ).timeout(const Duration(seconds: 10));
       
+      print('Respuesta HTTP: ${response.statusCode}');
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       print('Error al comprobar la conexión con la API: $e');

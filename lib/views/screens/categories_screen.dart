@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import '../../models/category.dart';
 import '../../controllers/category_controller.dart';
-import 'add_category_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({Key? key}) : super(key: key);
+
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
 }
@@ -47,7 +48,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         await _loadCategories();
       },
       child: _isLoading 
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : _errorMessage.isNotEmpty
           ? _buildErrorView()
           : _buildCategoryList(),
@@ -59,11 +60,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_errorMessage, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 16),
+          Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadCategories,
-            child: Text('Reintentar'),
+            child: const Text('Reintentar'),
           ),
         ],
       ),
@@ -75,7 +76,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       future: _categoriesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         
         if (snapshot.hasError) {
@@ -84,10 +85,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Error: ${snapshot.error}'),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _loadCategories,
-                  child: Text('Reintentar'),
+                  child: const Text('Reintentar'),
                 ),
               ],
             ),
@@ -97,26 +98,26 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         final categories = snapshot.data ?? [];
         
         if (categories.isEmpty) {
-          return Center(
+          return const Center(
             child: Text('No hay categorías'),
           );
         }
         
         return ListView.builder(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           itemCount: categories.length,
           itemBuilder: (context, index) {
             final category = categories[index];
             return Card(
               elevation: 2,
-              margin: EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
                 title: Text(
                   category.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(category.description),
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   backgroundColor: Colors.orange,
                   child: Icon(Icons.category, color: Colors.white),
                 ),

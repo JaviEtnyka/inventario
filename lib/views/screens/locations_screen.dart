@@ -5,6 +5,8 @@ import '../../controllers/location_controller.dart';
 
 
 class LocationsScreen extends StatefulWidget {
+  const LocationsScreen({Key? key}) : super(key: key);
+
   @override
   _LocationsScreenState createState() => _LocationsScreenState();
 }
@@ -47,7 +49,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
         await _loadLocations();
       },
       child: _isLoading 
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : _errorMessage.isNotEmpty
           ? _buildErrorView()
           : _buildLocationList(),
@@ -59,11 +61,11 @@ class _LocationsScreenState extends State<LocationsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_errorMessage, style: TextStyle(color: Colors.red)),
-          SizedBox(height: 16),
+          Text(_errorMessage, style: const TextStyle(color: Colors.red)),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _loadLocations,
-            child: Text('Reintentar'),
+            child: const Text('Reintentar'),
           ),
         ],
       ),
@@ -75,7 +77,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
       future: _locationsFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         
         if (snapshot.hasError) {
@@ -84,10 +86,10 @@ class _LocationsScreenState extends State<LocationsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Error: ${snapshot.error}'),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _loadLocations,
-                  child: Text('Reintentar'),
+                  child: const Text('Reintentar'),
                 ),
               ],
             ),
@@ -97,26 +99,26 @@ class _LocationsScreenState extends State<LocationsScreen> {
         final locations = snapshot.data ?? [];
         
         if (locations.isEmpty) {
-          return Center(
+          return const Center(
             child: Text('No hay ubicaciones'),
           );
         }
         
         return ListView.builder(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           itemCount: locations.length,
           itemBuilder: (context, index) {
             final location = locations[index];
             return Card(
               elevation: 2,
-              margin: EdgeInsets.only(bottom: 8),
+              margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
                 title: Text(
                   location.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(location.description),
-                leading: CircleAvatar(
+                leading: const CircleAvatar(
                   backgroundColor: Colors.green,
                   child: Icon(Icons.place, color: Colors.white),
                 ),
