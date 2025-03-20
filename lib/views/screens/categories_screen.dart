@@ -8,6 +8,8 @@ import 'category_details_screen.dart';
 import 'add_category_screen.dart';
 
 class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({super.key});
+
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
 }
@@ -55,7 +57,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           // Lista de categorías
           Expanded(
             child: _isLoading 
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : _errorMessage.isNotEmpty
                 ? _buildErrorView()
                 : _buildCategoryList(),
@@ -67,17 +69,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   
   Widget _buildSearchBar() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Buscar categorías...',
-          prefixIcon: Icon(Icons.search),
+          prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
         ),
         onChanged: (value) {
           setState(() {
@@ -94,26 +96,26 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             color: AppTheme.errorColor,
             size: 48,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             _errorMessage,
-            style: TextStyle(color: AppTheme.errorColor),
+            style: const TextStyle(color: AppTheme.errorColor),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: _loadCategories,
-            icon: Icon(Icons.refresh),
-            label: Text('Reintentar'),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Reintentar'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorColor,
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             ),
           ),
         ],
@@ -130,7 +132,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         future: _categoriesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           
           if (snapshot.hasError) {
@@ -138,17 +140,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
-                  SizedBox(height: 16),
+                  const Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
+                  const SizedBox(height: 16),
                   Text(
                     'Error: ${snapshot.error}',
-                    style: TextStyle(color: AppTheme.errorColor),
+                    style: const TextStyle(color: AppTheme.errorColor),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: _loadCategories,
-                    icon: Icon(Icons.refresh),
-                    label: Text('Reintentar'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reintentar'),
                   ),
                 ],
               ),
@@ -170,8 +172,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           }
           
           return GridView.builder(
-            padding: EdgeInsets.all(16),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            padding: const EdgeInsets.all(16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 1.2,
               crossAxisSpacing: 16,
@@ -190,7 +192,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   
   Widget _buildCategoryCard(Category category) {
     return CustomCard(
-      padding: EdgeInsets.all(0),
+      padding: const EdgeInsets.all(0),
       onTap: () {
         Navigator.push(
           context,
@@ -209,7 +211,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         children: [
           // Contenido principal
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -221,18 +223,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     color: AppTheme.categoryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.category,
                     color: AppTheme.categoryColor,
                     size: 30,
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 
                 // Nombre
                 Text(
                   category.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -244,7 +246,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 if (category.description.isNotEmpty)
                   Text(
                     category.description,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
                       color: Colors.black54,
                     ),
@@ -262,7 +264,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             child: Container(
               width: 20,
               height: 20,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppTheme.categoryColor,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(8),
@@ -286,7 +288,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             size: 72,
             color: Colors.grey[400],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             _searchQuery.isEmpty 
                 ? 'No hay categorías disponibles' 
@@ -297,7 +299,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.push(
@@ -309,8 +311,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 }
               });
             },
-            icon: Icon(Icons.add),
-            label: Text('Añadir Categoría'),
+            icon: const Icon(Icons.add),
+            label: const Text('Añadir Categoría'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.categoryColor,
               foregroundColor: Colors.white,

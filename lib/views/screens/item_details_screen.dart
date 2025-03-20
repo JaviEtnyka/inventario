@@ -12,7 +12,7 @@ class ItemDetailsScreen extends StatelessWidget {
   final Item item;
   final ItemController _itemController = ItemController();
   
-  ItemDetailsScreen({required this.item});
+  ItemDetailsScreen({super.key, required this.item});
   
   @override
   Widget build(BuildContext context) {
@@ -28,21 +28,21 @@ class ItemDetailsScreen extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles'),
+        title: const Text('Detalles'),
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () => _navigateToEditScreen(context),
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () => _showDeleteConfirmation(context),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,7 +50,7 @@ class ItemDetailsScreen extends StatelessWidget {
             if (imageUrls.isNotEmpty)
               _buildImageGallery(imageUrls),
             
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Nombre y valor
             Row(
@@ -59,14 +59,14 @@ class ItemDetailsScreen extends StatelessWidget {
                 Expanded(
                   child: Text(
                     item.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.blue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -74,7 +74,7 @@ class ItemDetailsScreen extends StatelessWidget {
                   ),
                   child: Text(
                     currencyFormat.format(item.value),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
@@ -84,7 +84,7 @@ class ItemDetailsScreen extends StatelessWidget {
               ],
             ),
             
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Categoría y ubicación
             Row(
@@ -97,7 +97,7 @@ class ItemDetailsScreen extends StatelessWidget {
                     iconColor: AppTheme.categoryColor,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: InfoCard(
                     title: 'Ubicación',
@@ -109,36 +109,36 @@ class ItemDetailsScreen extends StatelessWidget {
               ],
             ),
             
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             // Descripción
             if (item.description.isNotEmpty) ...[
-              Text(
+              const Text(
                 'Descripción',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               CustomCard(
                 child: Text(
                   item.description,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
             
             // Información adicional
-            Text(
+            const Text(
               'Información Adicional',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             CustomCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class ItemDetailsScreen extends StatelessWidget {
               ),
             ),
             
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             
             // Botones de acción
             Row(
@@ -170,7 +170,7 @@ class ItemDetailsScreen extends StatelessWidget {
                     color: AppTheme.secondaryColor,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: CustomButton(
                     text: 'Eliminar',
@@ -216,7 +216,7 @@ class ItemDetailsScreen extends StatelessWidget {
                           size: 40,
                           color: Colors.grey[700],
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           'Error al cargar imagen',
                           style: TextStyle(color: Colors.grey[700]),
@@ -236,7 +236,7 @@ class ItemDetailsScreen extends StatelessWidget {
   // Construir fila de información
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -253,7 +253,7 @@ class ItemDetailsScreen extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -292,15 +292,15 @@ class ItemDetailsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirmar eliminación'),
-        content: Text('¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.'),
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de que deseas eliminar este item? Esta acción no se puede deshacer.'),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () => _deleteItem(context),
@@ -308,7 +308,7 @@ class ItemDetailsScreen extends StatelessWidget {
               backgroundColor: AppTheme.errorColor,
               foregroundColor: Colors.white,
             ),
-            child: Text('Eliminar'),
+            child: const Text('Eliminar'),
           ),
         ],
       ),
@@ -323,7 +323,7 @@ class ItemDetailsScreen extends StatelessWidget {
       
       // Mostrar snackbar de confirmación
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Item eliminado correctamente'),
           backgroundColor: Colors.green,
         ),

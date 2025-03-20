@@ -11,7 +11,7 @@ class CustomButton extends StatelessWidget {
   final bool isFullWidth;
   final double? height;
   
-  const CustomButton({
+  const CustomButton({super.key, 
     required this.text,
     this.icon,
     required this.onPressed,
@@ -31,11 +31,11 @@ class CustomButton extends StatelessWidget {
       children: [
         if (icon != null) ...[
           Icon(icon),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
         ],
         Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
@@ -48,7 +48,7 @@ class CustomButton extends StatelessWidget {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: buttonColor),
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.buttonRadius),
           ),
@@ -62,7 +62,7 @@ class CustomButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonColor,
           foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.buttonRadius),
           ),
@@ -80,7 +80,7 @@ class ActionButton extends StatelessWidget {
   final Color? color;
   final String? tooltip;
   
-  const ActionButton({
+  const ActionButton({super.key, 
     required this.icon,
     required this.onPressed,
     this.color,
@@ -100,7 +100,7 @@ class ActionButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(8),
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Icon(
               icon,
               color: buttonColor,

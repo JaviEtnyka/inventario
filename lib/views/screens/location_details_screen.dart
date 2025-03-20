@@ -9,7 +9,7 @@ import 'edit_location_screen.dart';
 class LocationDetailsScreen extends StatefulWidget {
   final Location location;
   
-  LocationDetailsScreen({required this.location});
+  const LocationDetailsScreen({super.key, required this.location});
   
   @override
   _LocationDetailsScreenState createState() => _LocationDetailsScreenState();
@@ -53,83 +53,83 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles de Ubicación'),
+        title: const Text('Detalles de Ubicación'),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () => _navigateToEditScreen(context),
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () => _showDeleteConfirmation(context),
           ),
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Nombre de la ubicación
                   Text(
                     widget.location.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   
                   // Descripción
                   if (widget.location.description.isNotEmpty) ...[
-                    Text(
+                    const Text(
                       'Descripción:',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       widget.location.description,
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                   ],
                   
                   // Estadísticas
                   Card(
                     elevation: 2,
                     child: Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Estadísticas',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           _buildInfoRow(Icons.inventory, 'Objetos en esta ubicación', _itemCount.toString()),
                         ],
                       ),
                     ),
                   ),
                   
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   
                   // Fecha de registro
                   if (widget.location.createdAt != null)
                     Text(
                       'Fecha de registro: ${_formatDate(widget.location.createdAt!)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
@@ -143,21 +143,21 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
   // Construir fila de información
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.green),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(
             '$label: ',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),
@@ -193,16 +193,16 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirmar eliminación'),
-        content: Text('¿Estás seguro de que deseas eliminar esta ubicación? Esta acción no se puede deshacer.'),
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de que deseas eliminar esta ubicación? Esta acción no se puede deshacer.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
+            child: const Text('Cancelar'),
           ),
           TextButton(
             onPressed: () => _deleteLocation(context),
-            child: Text('Eliminar', style: TextStyle(color: Colors.red)),
+            child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -220,7 +220,7 @@ class _LocationDetailsScreenState extends State<LocationDetailsScreen> {
       Navigator.pop(context, true); // Volver a la pantalla anterior con resultado positivo
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ubicación eliminada correctamente')),
+        const SnackBar(content: Text('Ubicación eliminada correctamente')),
       );
     } catch (e) {
       Navigator.pop(context); // Cerrar diálogo

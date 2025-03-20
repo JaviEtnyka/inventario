@@ -8,7 +8,7 @@ class CustomCard extends StatelessWidget {
   final VoidCallback? onTap;
   final Color? color;
   
-  const CustomCard({
+  const CustomCard({super.key, 
     required this.child,
     this.padding,
     this.onTap,
@@ -18,7 +18,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
       ),
@@ -28,7 +28,7 @@ class CustomCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppTheme.borderRadius),
         child: Padding(
-          padding: padding ?? EdgeInsets.all(16),
+          padding: padding ?? const EdgeInsets.all(16),
           child: child,
         ),
       ),
@@ -42,7 +42,7 @@ class InfoCard extends StatelessWidget {
   final IconData icon;
   final Color? iconColor;
   
-  const InfoCard({
+  const InfoCard({super.key, 
     required this.title,
     required this.value,
     required this.icon,
@@ -52,11 +52,11 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: (iconColor ?? Theme.of(context).primaryColor).withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
@@ -67,7 +67,7 @@ class InfoCard extends StatelessWidget {
               size: 24,
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +76,7 @@ class InfoCard extends StatelessWidget {
                   title,
                   style: AppTheme.captionStyle,
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   value,
                   style: AppTheme.titleStyle,

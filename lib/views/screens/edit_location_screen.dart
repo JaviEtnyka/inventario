@@ -6,7 +6,7 @@ import '../../models/location.dart';
 class EditLocationScreen extends StatefulWidget {
   final Location location;
   
-  EditLocationScreen({required this.location});
+  const EditLocationScreen({super.key, required this.location});
   
   @override
   _EditLocationScreenState createState() => _EditLocationScreenState();
@@ -33,13 +33,13 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Ubicación'),
+        title: const Text('Editar Ubicación'),
         backgroundColor: Colors.green,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -53,8 +53,8 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: Icon(Icons.place),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        prefixIcon: const Icon(Icons.place),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -68,7 +68,7 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                         }
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     
                     // Descripción
                     TextFormField(
@@ -78,25 +78,25 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: Icon(Icons.description),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        prefixIcon: const Icon(Icons.description),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
                       maxLines: 3,
                       onSaved: (value) {
                         _description = value ?? '';
                       },
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     
                     // Botón de guardar
                     ElevatedButton.icon(
                       onPressed: _updateLocation,
-                      icon: Icon(Icons.save),
-                      label: Text('Guardar Cambios'),
+                      icon: const Icon(Icons.save),
+                      label: const Text('Guardar Cambios'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

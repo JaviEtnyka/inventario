@@ -6,7 +6,7 @@ import '../../models/category.dart';
 class EditCategoryScreen extends StatefulWidget {
   final Category category;
   
-  EditCategoryScreen({required this.category});
+  const EditCategoryScreen({super.key, required this.category});
   
   @override
   _EditCategoryScreenState createState() => _EditCategoryScreenState();
@@ -33,13 +33,13 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Categoría'),
+        title: const Text('Editar Categoría'),
         backgroundColor: Colors.orange,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -53,8 +53,8 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: Icon(Icons.category),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        prefixIcon: const Icon(Icons.category),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -68,7 +68,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                         }
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     
                     // Descripción
                     TextFormField(
@@ -78,25 +78,25 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: Icon(Icons.description),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        prefixIcon: const Icon(Icons.description),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
                       maxLines: 3,
                       onSaved: (value) {
                         _description = value ?? '';
                       },
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     
                     // Botón de guardar
                     ElevatedButton.icon(
                       onPressed: _updateCategory,
-                      icon: Icon(Icons.save),
-                      label: Text('Guardar Cambios'),
+                      icon: const Icon(Icons.save),
+                      label: const Text('Guardar Cambios'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

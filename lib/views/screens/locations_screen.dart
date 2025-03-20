@@ -8,6 +8,8 @@ import 'location_details_screen.dart';
 import 'add_location_screen.dart';
 
 class LocationsScreen extends StatefulWidget {
+  const LocationsScreen({super.key});
+
   @override
   _LocationsScreenState createState() => _LocationsScreenState();
 }
@@ -55,7 +57,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
           // Lista de ubicaciones
           Expanded(
             child: _isLoading 
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : _errorMessage.isNotEmpty
                 ? _buildErrorView()
                 : _buildLocationList(),
@@ -67,17 +69,17 @@ class _LocationsScreenState extends State<LocationsScreen> {
   
   Widget _buildSearchBar() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Buscar ubicaciones...',
-          prefixIcon: Icon(Icons.search),
+          prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
         ),
         onChanged: (value) {
           setState(() {
@@ -94,26 +96,26 @@ class _LocationsScreenState extends State<LocationsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             color: AppTheme.errorColor,
             size: 48,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             _errorMessage,
-            style: TextStyle(color: AppTheme.errorColor),
+            style: const TextStyle(color: AppTheme.errorColor),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: _loadLocations,
-            icon: Icon(Icons.refresh),
-            label: Text('Reintentar'),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Reintentar'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorColor,
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             ),
           ),
         ],
@@ -130,7 +132,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
         future: _locationsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           
           if (snapshot.hasError) {
@@ -138,17 +140,17 @@ class _LocationsScreenState extends State<LocationsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
-                  SizedBox(height: 16),
+                  const Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
+                  const SizedBox(height: 16),
                   Text(
                     'Error: ${snapshot.error}',
-                    style: TextStyle(color: AppTheme.errorColor),
+                    style: const TextStyle(color: AppTheme.errorColor),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: _loadLocations,
-                    icon: Icon(Icons.refresh),
-                    label: Text('Reintentar'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reintentar'),
                   ),
                 ],
               ),
@@ -170,7 +172,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
           }
           
           return ListView.builder(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             itemCount: locations.length,
             itemBuilder: (context, index) {
               final location = locations[index];
@@ -186,9 +188,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
     // Iconos para diferentes tipos de ubicaciones (puedes personalizarlos)
     IconData getLocationIcon(String name) {
       name = name.toLowerCase();
-      if (name.contains('sala') || name.contains('salón'))
+      if (name.contains('sala') || name.contains('salón')) {
         return Icons.weekend;
-      else if (name.contains('cocina'))
+      } else if (name.contains('cocina'))
         return Icons.kitchen;
       else if (name.contains('baño'))
         return Icons.bathtub;
@@ -208,7 +210,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
     final icon = getLocationIcon(location.name);
     
     return CustomCard(
-      padding: EdgeInsets.all(0),
+      padding: const EdgeInsets.all(0),
       onTap: () {
         Navigator.push(
           context,
@@ -236,7 +238,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
               // Icono
@@ -253,7 +255,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                   size: 32,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               
               // Información
               Expanded(
@@ -262,16 +264,16 @@ class _LocationsScreenState extends State<LocationsScreen> {
                   children: [
                     Text(
                       location.name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     if (location.description.isNotEmpty) ...[
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         location.description,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
                         ),
@@ -284,7 +286,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
               ),
               
               // Flecha
-              Icon(
+              const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
               ),
@@ -305,7 +307,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
             size: 72,
             color: Colors.grey[400],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             _searchQuery.isEmpty 
                 ? 'No hay ubicaciones disponibles' 
@@ -316,7 +318,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.push(
@@ -328,8 +330,8 @@ class _LocationsScreenState extends State<LocationsScreen> {
                 }
               });
             },
-            icon: Icon(Icons.add),
-            label: Text('Añadir Ubicación'),
+            icon: const Icon(Icons.add),
+            label: const Text('Añadir Ubicación'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.locationColor,
               foregroundColor: Colors.white,

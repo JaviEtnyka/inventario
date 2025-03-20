@@ -7,6 +7,8 @@ import '../widgets/item_list_card.dart';
 import 'item_details_screen.dart';
 
 class InventoryScreen extends StatefulWidget {
+  const InventoryScreen({super.key});
+
   @override
   _InventoryScreenState createState() => _InventoryScreenState();
 }
@@ -58,7 +60,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           // Resultado del inventario
           Expanded(
             child: _isLoading 
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : _errorMessage.isNotEmpty
                 ? _buildErrorView()
                 : _buildItemList(),
@@ -70,17 +72,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
   
   Widget _buildSearchBar() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Buscar en el inventario...',
-          prefixIcon: Icon(Icons.search),
+          prefixIcon: const Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(AppTheme.borderRadius),
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
         ),
         onChanged: (value) {
           setState(() {
@@ -97,26 +99,26 @@ class _InventoryScreenState extends State<InventoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             color: AppTheme.errorColor,
             size: 48,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             _errorMessage,
-            style: TextStyle(color: AppTheme.errorColor),
+            style: const TextStyle(color: AppTheme.errorColor),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: _loadItems,
-            icon: Icon(Icons.refresh),
-            label: Text('Reintentar'),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Reintentar'),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorColor,
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             ),
           ),
         ],
@@ -133,7 +135,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         future: _itemsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           
           if (snapshot.hasError) {
@@ -141,17 +143,17 @@ class _InventoryScreenState extends State<InventoryScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
-                  SizedBox(height: 16),
+                  const Icon(Icons.error_outline, color: AppTheme.errorColor, size: 48),
+                  const SizedBox(height: 16),
                   Text(
                     'Error: ${snapshot.error}',
-                    style: TextStyle(color: AppTheme.errorColor),
+                    style: const TextStyle(color: AppTheme.errorColor),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: _loadItems,
-                    icon: Icon(Icons.refresh),
-                    label: Text('Reintentar'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reintentar'),
                   ),
                 ],
               ),
@@ -166,10 +168,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
           
           // Mostramos el grid de items
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView.builder(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.only(bottom: 24),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 24),
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
@@ -195,7 +197,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             size: 72,
             color: Colors.grey[400],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             _searchQuery.isEmpty 
                 ? 'No hay items en el inventario' 
@@ -206,7 +208,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
           if (_searchQuery.isNotEmpty)
             ElevatedButton.icon(
               onPressed: () {
@@ -215,8 +217,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 });
                 _loadItems();
               },
-              icon: Icon(Icons.close),
-              label: Text('Limpiar búsqueda'),
+              icon: const Icon(Icons.close),
+              label: const Text('Limpiar búsqueda'),
             ),
         ],
       ),

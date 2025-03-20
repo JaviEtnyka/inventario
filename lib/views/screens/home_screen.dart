@@ -13,6 +13,8 @@ import '../../config/app_config.dart';
 import '../../controllers/item_controller.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -20,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   bool _isSearchVisible = false;
-  String _searchQuery = '';
   final ItemController _itemController = ItemController();
   double _totalValue = 0.0;
   bool _isLoadingValue = true;
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     // Color de la barra de estado basado en el índice seleccionado
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
       ),
@@ -122,13 +123,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Container(
         height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: [
             // Título
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   children: [
                     Text(
                       _titles[_selectedIndex],
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -164,18 +165,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 child: TextField(
                   controller: _searchController,
                   autofocus: true,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Buscar...',
-                    hintStyle: TextStyle(color: Colors.white70),
+                    hintStyle: const TextStyle(color: Colors.white70),
                     border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search, color: Colors.white70),
+                    prefixIcon: const Icon(Icons.search, color: Colors.white70),
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.close, color: Colors.white70),
+                      icon: const Icon(Icons.close, color: Colors.white70),
                       onPressed: () {
                         setState(() {
                           _isSearchVisible = false;
-                          _searchQuery = '';
                           _searchController.clear();
                         });
                       },
@@ -183,7 +183,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                   onChanged: (value) {
                     setState(() {
-                      _searchQuery = value;
                     });
                   },
                 ),
@@ -194,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               // Solo mostrar búsqueda en pantallas relevantes (no en Ajustes)
               if (_selectedIndex < 3)
                 IconButton(
-                  icon: Icon(Icons.search, color: Colors.white),
+                  icon: const Icon(Icons.search, color: Colors.white),
                   onPressed: () {
                     setState(() {
                       _isSearchVisible = true;
@@ -202,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   },
                 ),
               IconButton(
-                icon: Icon(Icons.info_outline, color: Colors.white),
+                icon: const Icon(Icons.info_outline, color: Colors.white),
                 onPressed: () {
                   _showAppInfo(context);
                 },
@@ -218,9 +217,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return BottomAppBar(
       notchMargin: 8,
       elevation: 8,
-      shape: CircularNotchedRectangle(),
+      shape: const CircularNotchedRectangle(),
       color: Colors.white,
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -232,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             _buildNavItem(1, _icons[1], _titles[1]),
             
             // Espacio para el botón flotante
-            SizedBox(width: 40),
+            const SizedBox(width: 40),
             
             // Botón Ubicaciones
             _buildNavItem(2, _icons[2], _titles[2]),
@@ -264,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: color),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
@@ -285,9 +284,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         _navigateToAddScreen(context);
       },
       backgroundColor: _colors[_selectedIndex],
-      child: Icon(Icons.add),
       tooltip: 'Añadir ${_getSingularTitle(_selectedIndex)}',
       elevation: 4,
+      child: Icon(Icons.add),
     );
   }
   
@@ -342,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
+        title: const Text(
           AppConfig.appName,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -350,21 +349,21 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.info, color: AppTheme.primaryColor),
               title: Text('Versión'),
               subtitle: Text(AppConfig.appVersion),
               contentPadding: EdgeInsets.zero,
             ),
-            Divider(),
-            Padding(
+            const Divider(),
+            const Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 'Una aplicación para gestionar el inventario de los objetos de valor de tu hogar.',
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Desarrollada con Flutter',
               style: TextStyle(
@@ -381,10 +380,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cerrar'),
             style: TextButton.styleFrom(
               foregroundColor: AppTheme.primaryColor,
             ),
+            child: Text('Cerrar'),
           ),
         ],
       ),

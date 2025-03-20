@@ -4,6 +4,8 @@ import '../../controllers/location_controller.dart';
 import '../../models/location.dart';
 
 class AddLocationScreen extends StatefulWidget {
+  const AddLocationScreen({super.key});
+
   @override
   _AddLocationScreenState createState() => _AddLocationScreenState();
 }
@@ -21,13 +23,13 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Añadir Ubicación'),
+        title: const Text('Añadir Ubicación'),
         backgroundColor: Colors.green,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -40,8 +42,8 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: Icon(Icons.place),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        prefixIcon: const Icon(Icons.place),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -51,7 +53,7 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
                       },
                       onSaved: (value) => _name = value!,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     
                     // Descripción
                     TextFormField(
@@ -60,23 +62,23 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: Icon(Icons.description),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        prefixIcon: const Icon(Icons.description),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       ),
                       maxLines: 3,
                       onSaved: (value) => _description = value ?? '',
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     
                     // Botón de guardar
                     ElevatedButton.icon(
                       onPressed: _saveLocation,
-                      icon: Icon(Icons.save),
-                      label: Text('Guardar Ubicación'),
+                      icon: const Icon(Icons.save),
+                      label: const Text('Guardar Ubicación'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -123,7 +125,7 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
           SnackBar(
             content: Text('Error al guardar la ubicación: $e'),
             backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
+            duration: const Duration(seconds: 3),
           ),
         );
       }

@@ -2,21 +2,19 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/category.dart';
-import '../../controllers/category_controller.dart';
 import '../../controllers/item_controller.dart';
 import 'edit_category_screen.dart';
 
 class CategoryDetailsScreen extends StatefulWidget {
   final Category category;
   
-  CategoryDetailsScreen({required this.category});
+  const CategoryDetailsScreen({super.key, required this.category});
   
   @override
   _CategoryDetailsScreenState createState() => _CategoryDetailsScreenState();
 }
 
 class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
-  final CategoryController _categoryController = CategoryController();
   final ItemController _itemController = ItemController();
   bool _isLoading = false;
   int _itemCount = 0;
@@ -53,83 +51,83 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles de Categoría'),
+        title: const Text('Detalles de Categoría'),
         backgroundColor: Colors.orange,
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit),
             onPressed: () => _navigateToEditScreen(context),
           ),
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
             onPressed: () => _showDeleteConfirmation(context),
           ),
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Nombre de la categoría
                   Text(
                     widget.category.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   
                   // Descripción
                   if (widget.category.description.isNotEmpty) ...[
-                    Text(
+                    const Text(
                       'Descripción:',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       widget.category.description,
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                   ],
                   
                   // Estadísticas
                   Card(
                     elevation: 2,
                     child: Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Estadísticas',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           _buildInfoRow(Icons.inventory, 'Objetos en esta categoría', _itemCount.toString()),
                         ],
                       ),
                     ),
                   ),
                   
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   
                   // Fecha de registro
                   if (widget.category.createdAt != null)
                     Text(
                       'Fecha de registro: ${_formatDate(widget.category.createdAt!)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
@@ -143,21 +141,21 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
   // Construir fila de información
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.orange),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text(
             '$label: ',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),
@@ -193,16 +191,16 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Confirmar eliminación'),
-        content: Text('¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer.'),
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de que deseas eliminar esta categoría? Esta acción no se puede deshacer.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
+            child: const Text('Cancelar'),
           ),
           TextButton(
             onPressed: () => _deleteCategory(context),
-            child: Text('Eliminar', style: TextStyle(color: Colors.red)),
+            child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -220,7 +218,7 @@ class _CategoryDetailsScreenState extends State<CategoryDetailsScreen> {
       Navigator.pop(context, true); // Volver a la pantalla anterior con resultado positivo
       
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Categoría eliminada correctamente')),
+        const SnackBar(content: Text('Categoría eliminada correctamente')),
       );
     } catch (e) {
       Navigator.pop(context); // Cerrar diálogo

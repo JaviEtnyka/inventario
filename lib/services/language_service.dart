@@ -13,16 +13,16 @@ class LanguageService {
   
   // Idiomas disponibles
   final Map<String, Locale> _availableLanguages = {
-    'Español': Locale('es', 'ES'),
-    'English': Locale('en', 'US'),
-    'Français': Locale('fr', 'FR'),
-    'Deutsch': Locale('de', 'DE'),
+    'Español': const Locale('es', 'ES'),
+    'English': const Locale('en', 'US'),
+    'Français': const Locale('fr', 'FR'),
+    'Deutsch': const Locale('de', 'DE'),
   };
   
   // Obtener locale actual
   Locale getLocale() {
     final language = _preferencesService.language;
-    return _availableLanguages[language] ?? Locale('es', 'ES');
+    return _availableLanguages[language] ?? const Locale('es', 'ES');
   }
   
   // Cambiar idioma

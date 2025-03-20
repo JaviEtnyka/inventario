@@ -7,7 +7,7 @@ class ImagePickerWidget extends StatelessWidget {
   final List<File> images;
   final Function(List<File>) onImagesChanged;
   
-  const ImagePickerWidget({
+  const ImagePickerWidget({super.key, 
     required this.images,
     required this.onImagesChanged,
   });
@@ -17,14 +17,14 @@ class ImagePickerWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Fotos:',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         
         // Botones de cámara y galería
         Row(
@@ -32,18 +32,18 @@ class ImagePickerWidget extends StatelessWidget {
           children: [
             ElevatedButton.icon(
               onPressed: () => _takePhoto(context),
-              icon: Icon(Icons.camera_alt),
-              label: Text('Tomar Foto'),
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Tomar Foto'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             ElevatedButton.icon(
               onPressed: () => _pickImages(context),
-              icon: Icon(Icons.photo_library),
-              label: Text('Seleccionar Fotos'),
+              icon: const Icon(Icons.photo_library),
+              label: const Text('Seleccionar Fotos'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
@@ -51,7 +51,7 @@ class ImagePickerWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         
         // Mostrar imágenes seleccionadas
         images.isNotEmpty
@@ -62,7 +62,7 @@ class ImagePickerWidget extends StatelessWidget {
                   itemCount: images.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding: EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.only(right: 8),
                       child: Stack(
                         children: [
                           ClipRRect(
@@ -89,8 +89,8 @@ class ImagePickerWidget extends StatelessWidget {
                                   color: Colors.red,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                padding: EdgeInsets.all(4),
-                                child: Icon(
+                                padding: const EdgeInsets.all(4),
+                                child: const Icon(
                                   Icons.close,
                                   color: Colors.white,
                                   size: 16,
@@ -104,7 +104,7 @@ class ImagePickerWidget extends StatelessWidget {
                   },
                 ),
               )
-            : Text('No hay fotos seleccionadas', style: TextStyle(color: Colors.grey)),
+            : const Text('No hay fotos seleccionadas', style: TextStyle(color: Colors.grey)),
       ],
     );
   }

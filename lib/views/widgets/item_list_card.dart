@@ -8,7 +8,7 @@ class ItemListCard extends StatelessWidget {
   final Item item;
   final VoidCallback onTap;
   
-  const ItemListCard({
+  const ItemListCard({super.key, 
     required this.item,
     required this.onTap,
   });
@@ -27,7 +27,7 @@ class ItemListCard extends StatelessWidget {
           // Si hay imágenes, mostrar la primera
           if (hasImages)
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(AppTheme.borderRadius),
                 topRight: Radius.circular(AppTheme.borderRadius),
               ),
@@ -50,7 +50,7 @@ class ItemListCard extends StatelessWidget {
           
           // Detalles del item
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -66,16 +66,16 @@ class ItemListCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.blue.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         '€${item.value.toStringAsFixed(2)}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
@@ -84,7 +84,7 @@ class ItemListCard extends StatelessWidget {
                   ],
                 ),
                 
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 
                 // Descripción
                 if (item.description.isNotEmpty) ...[
@@ -94,7 +94,7 @@ class ItemListCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                 ],
                 
                 // Categoría y ubicación
@@ -126,7 +126,7 @@ class ItemListCard extends StatelessWidget {
   
   Widget _buildChip(String label, IconData icon, Color color) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
@@ -136,7 +136,7 @@ class ItemListCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: color),
-          SizedBox(width: 4),
+          const SizedBox(width: 4),
           Text(
             label,
             style: TextStyle(

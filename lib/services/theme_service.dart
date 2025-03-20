@@ -23,7 +23,7 @@ class ThemeService {
     // Crear tema oscuro basado en el tema claro
     _darkTheme = ThemeData.dark().copyWith(
       primaryColor: AppTheme.primaryColor,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppTheme.primaryColor,
         secondary: AppTheme.secondaryColor,
         error: AppTheme.errorColor,

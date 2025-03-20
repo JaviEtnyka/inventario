@@ -33,7 +33,7 @@ void main() async {
   
   // Personalizar la barra de estado
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
+    const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ),
@@ -43,6 +43,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -57,16 +59,16 @@ class MyApp extends StatelessWidget {
             theme: themeProvider.theme,
             debugShowCheckedModeBanner: false,
             locale: languageProvider.locale,
-            localizationsDelegates: [
+            localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: [
-              const Locale('es', 'ES'),
-              const Locale('en', 'US'),
-              const Locale('fr', 'FR'),
-              const Locale('de', 'DE'),
+            supportedLocales: const [
+              Locale('es', 'ES'),
+              Locale('en', 'US'),
+              Locale('fr', 'FR'),
+              Locale('de', 'DE'),
             ],
             home: HomeScreen(),
           );

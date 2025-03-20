@@ -18,15 +18,6 @@ class CategoryController {
   }
   
   // Datos de prueba para desarrollo inicial
-  List<Category> _getTestCategories() {
-    return [
-      Category(id: 1, name: 'Electrónica', description: 'Dispositivos electrónicos'),
-      Category(id: 2, name: 'Muebles', description: 'Mobiliario del hogar'),
-      Category(id: 3, name: 'Ropa', description: 'Vestimenta y accesorios'),
-      Category(id: 4, name: 'Joyería', description: 'Objetos de valor'),
-      Category(id: 5, name: 'Libros', description: 'Libros y documentos'),
-    ];
-  }
   
   // Obtener una categoría por ID
   Future<Category> getCategory(int id) async {

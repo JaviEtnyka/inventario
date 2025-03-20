@@ -24,7 +24,7 @@ class AppTheme {
   static final BoxShadow cardShadow = BoxShadow(
     color: Colors.black.withOpacity(0.1),
     blurRadius: 8,
-    offset: Offset(0, 2),
+    offset: const Offset(0, 2),
   );
   
   // Estilos de texto
@@ -54,7 +54,7 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     primaryColor: primaryColor,
     primarySwatch: Colors.indigo,
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: primaryColor,
       secondary: secondaryColor,
       error: errorColor,
@@ -67,7 +67,7 @@ class AppTheme {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     ),
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
       titleTextStyle: TextStyle(
@@ -77,7 +77,7 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(buttonRadius),
         ),
@@ -87,11 +87,11 @@ class AppTheme {
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(borderRadius),
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       filled: true,
       fillColor: Colors.white,
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       titleLarge: titleStyle,
       titleMedium: subtitleStyle,
       bodyMedium: bodyStyle,

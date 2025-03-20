@@ -10,6 +10,8 @@ import '../../services/notification_service.dart';
 import '../../services/data_service.dart';
 
 class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -38,7 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     
     return Scaffold(
       body: ListView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         children: [
           // Sección de apariencia
           _buildSectionHeader('Apariencia'),
@@ -62,7 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.language,
           ),
           
-          Divider(),
+          const Divider(),
           
           // Sección de notificaciones
           _buildSectionHeader('Notificaciones'),
@@ -88,14 +90,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.notifications,
           ),
           
-          Divider(),
+          const Divider(),
           
           // Sección de datos
           _buildSectionHeader('Datos'),
           _buildSettingTile(
             title: 'Exportar inventario',
-            subtitle: 'Generar archivo CSV con tus datos',
-            trailing: _isExporting ? CircularProgressIndicator() : null,
+            subtitle: 'Exportar tus datos en diferentes formatos',
+            trailing: _isExporting ? const CircularProgressIndicator() : null,
             onTap: _isExporting ? null : () async {
               setState(() {
                 _isExporting = true;
@@ -114,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingTile(
             title: 'Importar datos',
             subtitle: 'Cargar inventario desde archivo',
-            trailing: _isImporting ? CircularProgressIndicator() : null,
+            trailing: _isImporting ? const CircularProgressIndicator() : null,
             onTap: _isImporting ? null : () async {
               setState(() {
                 _isImporting = true;
@@ -143,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingTile(
             title: 'Realizar copia de seguridad',
             subtitle: 'Guardar datos en la nube',
-            trailing: _isBackingUp ? CircularProgressIndicator() : null,
+            trailing: _isBackingUp ? const CircularProgressIndicator() : null,
             onTap: _isBackingUp ? null : () async {
               setState(() {
                 _isBackingUp = true;
@@ -169,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: Icons.backup,
           ),
           
-          Divider(),
+          const Divider(),
           
           // Sección Acerca de
           _buildSectionHeader('Acerca de'),
@@ -207,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Text(
         title.toUpperCase(),
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
           color: AppTheme.primaryColor,
@@ -225,9 +227,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Widget? trailing,
   }) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       leading: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: AppTheme.primaryColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
@@ -236,10 +238,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       title: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.w600),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(subtitle),
-      trailing: trailing ?? (onTap != null ? Icon(Icons.arrow_forward_ios, size: 16) : null),
+      trailing: trailing ?? (onTap != null ? const Icon(Icons.arrow_forward_ios, size: 16) : null),
       onTap: onTap,
       enabled: onTap != null,
     );
@@ -253,9 +255,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required ValueChanged<bool> onChanged,
   }) {
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       leading: Container(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: AppTheme.primaryColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10),
@@ -264,7 +266,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       title: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.w600),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(subtitle),
       trailing: Switch(
@@ -279,7 +281,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
-        title: Text('Seleccionar idioma'),
+        title: const Text('Seleccionar idioma'),
         children: provider.availableLanguages.map((language) {
           return SimpleDialogOption(
             onPressed: () {
@@ -290,7 +292,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Idioma cambiado a $language'),
-                  duration: Duration(seconds: 2),
+                  duration: const Duration(seconds: 2),
                 ),
               );
             },
@@ -299,9 +301,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Row(
                 children: [
                   provider.currentLanguage == language
-                      ? Icon(Icons.radio_button_checked, color: AppTheme.primaryColor)
-                      : Icon(Icons.radio_button_unchecked),
-                  SizedBox(width: 16),
+                      ? const Icon(Icons.radio_button_checked, color: AppTheme.primaryColor)
+                      : const Icon(Icons.radio_button_unchecked),
+                  const SizedBox(width: 16),
                   Text(language),
                 ],
               ),
@@ -312,53 +314,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
   
-  Future<void> _showExportOptions(BuildContext context) async {
-    final option = await showDialog<String>(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: Text('Exportar inventario'),
-        children: [
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, 'csv'),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.table_chart, color: Colors.green),
-                  SizedBox(width: 16),
-                  Text('Exportar como CSV'),
-                ],
-              ),
+  // Método modificado _showExportOptions para manejar exportación en web
+Future<void> _showExportOptions(BuildContext context) async {
+  final option = await showDialog<String>(
+    context: context,
+    builder: (context) => SimpleDialog(
+      title: const Text('Exportar inventario'),
+      children: [
+        SimpleDialogOption(
+          onPressed: () => Navigator.pop(context, 'csv'),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.table_chart, color: Colors.green),
+                SizedBox(width: 16),
+                Text('Exportar como CSV'),
+              ],
             ),
           ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, 'json'),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.code, color: Colors.blue),
-                  SizedBox(width: 16),
-                  Text('Exportar como JSON'),
-                ],
-              ),
+        ),
+        SimpleDialogOption(
+          onPressed: () => Navigator.pop(context, 'json'),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.code, color: Colors.blue),
+                SizedBox(width: 16),
+                Text('Exportar como JSON'),
+              ],
             ),
           ),
-        ],
-      ),
-    );
-    
-    if (option == null) return;
-    
-    String? filePath;
-    if (option == 'csv') {
-      filePath = await _dataService.exportInventoryToCsv();
-    } else if (option == 'json') {
-      filePath = await _dataService.exportInventoryToJson();
-    }
-    
-    // Mostrar resultado
-    if (mounted) {
+        ),
+        SimpleDialogOption(
+          onPressed: () => Navigator.pop(context, 'excel'),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.grid_on, color: Colors.deepOrange),
+                SizedBox(width: 16),
+                Text('Exportar como Excel'),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+  
+  if (option == null) return;
+  
+  String? filePath;
+  bool isWebExport = false;
+  
+  if (option == 'csv') {
+    filePath = await _dataService.exportInventoryToCsv();
+  } else if (option == 'json') {
+    filePath = await _dataService.exportInventoryToJson();
+  } else if (option == 'excel') {
+    filePath = await _dataService.exportInventoryToExcel();
+  }
+  
+  // Comprobar si es una exportación web
+  isWebExport = filePath == 'web-export';
+  
+  // Mostrar resultado
+  if (mounted) {
+    if (isWebExport) {
+      // Mensaje específico para web
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('La exportación en web está limitada. Los datos se han generado pero no se pueden descargar automáticamente.'),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 5),
+        ),
+      );
+    } else {
+      // Mensaje normal para dispositivos nativos
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(filePath != null 
@@ -369,6 +403,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     }
   }
+}
   
   void _showTextDialog(BuildContext context, String title, String content) {
     showDialog(
@@ -382,8 +417,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             // Título
             Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
                 color: AppTheme.primaryColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(AppTheme.borderRadius),
@@ -396,10 +431,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title.contains('Términos') ? Icons.gavel : Icons.privacy_tip,
                     color: Colors.white,
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -415,25 +450,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 maxHeight: MediaQuery.of(context).size.height * 0.6,
               ),
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Text(
                   content,
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
             ),
             
             // Botón de cerrar
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('Cerrar'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryColor,
                   foregroundColor: Colors.white,
-                  minimumSize: Size(double.infinity, 48),
+                  minimumSize: const Size(double.infinity, 48),
                 ),
+                child: const Text('Cerrar'),
               ),
             ),
           ],
