@@ -51,17 +51,19 @@ class Item {
     );
   }
   
-  Map<String, dynamic> toJson() {
-    return {
-      //'id': id,
-      'name': name,
-      'description': description,
-      'value': value,
-      'category_id': categoryId,
-      'location_id': locationId,
-      'image_urls': imageUrls,
-    };
-  }
+ Map<String, dynamic> toJson() {
+  // Asegurarse de que id sea string si es requerido por la API
+  return {
+    'id': id.toString(), // Asegurarse que id sea string
+    'name': name,
+    'description': description ?? '', // Usar cadena vacía si es null
+    'value': value.toString(), // Convertir a string si la API lo espera así
+    'purchase_date': purchaseDate ?? '', // Usar cadena vacía si es null
+    'category_id': categoryId?.toString() ?? null, // Puede ser null
+    'location_id': locationId?.toString() ?? null, // Puede ser null
+    'image_urls': imageUrls ?? '',
+  };
+}
   
   List<String> getImageUrlsList() {
     if (imageUrls.isEmpty) return [];

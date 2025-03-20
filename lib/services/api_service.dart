@@ -85,22 +85,49 @@ class ApiService {
   }
   
   /// Actualiza un item existente
-  static Future<void> updateItem(Item item) async {
-    try {
-      final response = await http.post(
-        Uri.parse(ApiConfig.updateItem),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(item.toJson())
-      );
-      
-      if (response.statusCode != 200) {
-        throw Exception('Error al actualizar el item: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error en updateItem: $e');
-      rethrow;
+static Future<void> updateItem(Item item) async {
+  try {
+    // Imprimir el contenido del JSON que enviamos
+    final jsonData = item.toJson();
+    print('Actualizando item ID ${item.id}');
+    print('JSON enviado: ${json.encode(jsonData)}');
+    print('URL: ${ApiConfig.updateItem}');
+    
+    final response = await http.post(
+      Uri.parse(ApiConfig.updateItem),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(jsonData)
+    ).timeout(const Duration(seconds: 15)); // Añadir timeout para evitar esperas largas
+    
+    print('Respuesta HTTP: ${response.statusCode}');
+    print('Cuerpo de la respuesta: ${response.body}');
+    
+    if (response.statusCode != 200) {
+      throw Exception('Error al actualizar el item: ${response.statusCode} - ${response.body}');
     }
+  } catch (e) {
+    // En caso de error de conexión, proporcionar más información
+    if (e.toString().contains('XMLHttpRequest error') || 
+        e.toString().contains('SocketException') ||
+        e.toString().contains('TimeoutException')) {
+      print('Error de conexión detectado: $e');
+      
+      // Intentar verificar si el servidor está disponible directamente
+      try {
+        final testResponse = await http.get(
+          Uri.parse(ApiConfig.baseUrl),
+        ).timeout(const Duration(seconds: 5));
+        
+        print('Prueba de conexión al servidor: ${testResponse.statusCode}');
+      } catch (connectionError) {
+        print('Error confirmado al intentar conectar con el servidor: $connectionError');
+      }
+    }
+    
+    print('Error detallado en updateItem: $e');
+    rethrow;
   }
+}
   
   /// Elimina un item por su ID
   static Future<void> deleteItem(int id) async {
