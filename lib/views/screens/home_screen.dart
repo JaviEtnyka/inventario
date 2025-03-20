@@ -11,6 +11,7 @@ import 'add_location_screen.dart';
 import '../../config/app_theme.dart';
 import '../../config/app_config.dart';
 import '../../controllers/item_controller.dart';
+import 'statistics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   bool _isSearchVisible = false;
+  String _searchQuery = '';
   final ItemController _itemController = ItemController();
   double _totalValue = 0.0;
   bool _isLoadingValue = true;
@@ -58,9 +60,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     
     // Inicializar las pantallas
     _screens = [
-      InventoryScreen(),
-      CategoriesScreen(),
-      LocationsScreen(),
+      const InventoryScreen(),
+      const CategoriesScreen(),
+      const LocationsScreen(),
       SettingsScreen(),
     ];
   }
@@ -176,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       onPressed: () {
                         setState(() {
                           _isSearchVisible = false;
+                          _searchQuery = '';
                           _searchController.clear();
                         });
                       },
@@ -183,6 +186,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                   onChanged: (value) {
                     setState(() {
+                      _searchQuery = value;
                     });
                   },
                 ),
@@ -200,6 +204,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     });
                   },
                 ),
+                IconButton(
+            icon: const Icon(Icons.bar_chart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const StatisticsScreen()),
+              );
+            },
+            tooltip: 'Estadísticas',
+          ),
               IconButton(
                 icon: const Icon(Icons.info_outline, color: Colors.white),
                 onPressed: () {
@@ -304,16 +318,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     
     switch (_selectedIndex) {
       case 0:
-        screen = AddItemScreen();
+        screen = const AddItemScreen();
         break;
       case 1:
-        screen = AddCategoryScreen();
+        screen = const AddCategoryScreen();
         break;
       case 2:
         screen = AddLocationScreen();
         break;
       default:
-        screen = AddItemScreen();
+        screen = const AddItemScreen();
         break;
     }
     
@@ -324,9 +338,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       if (result == true) {
         // Recargar la pantalla actual
         setState(() {
-          _screens[0] = InventoryScreen();
-          _screens[1] = CategoriesScreen();
-          _screens[2] = LocationsScreen();
+          _screens[0] = const InventoryScreen();
+          _screens[1] = const CategoriesScreen();
+          _screens[2] = const LocationsScreen();
           
           // Si estamos en la pantalla de inventario, también actualizamos el valor total
           if (_selectedIndex == 0) {

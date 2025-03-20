@@ -1,13 +1,7 @@
-// views/screens/settings_screen.dart (implementado)
+// views/screens/settings_screen.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../config/app_config.dart';
-import '../../providers/theme_provider.dart';
-import '../../providers/language_provider.dart';
-import '../../services/preferences_service.dart';
-import '../../services/notification_service.dart';
-import '../../services/data_service.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -17,27 +11,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // Servicios
-  final PreferencesService _preferencesService = PreferencesService();
-  final NotificationService _notificationService = NotificationService();
-  final DataService _dataService = DataService();
-  
-  // Estado
-  bool _isExporting = false;
-  bool _isImporting = false;
-  bool _isBackingUp = false;
+  // Flags para opciones de configuración
+  bool _notificationsEnabled = true;
+  bool _darkModeEnabled = false;
+  String _selectedLanguage = 'Español';
   
   @override
   Widget build(BuildContext context) {
-    // Acceder a los proveedores
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final languageProvider = Provider.of<LanguageProvider>(context);
-    
-    // Flags para opciones de configuración
-    bool darkModeEnabled = themeProvider.isDarkMode;
-    String selectedLanguage = languageProvider.currentLanguage;
-    bool notificationsEnabled = _preferencesService.notificationsEnabled;
-    
     return Scaffold(
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -47,9 +27,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingSwitch(
             title: 'Modo oscuro',
             subtitle: 'Cambiar entre tema claro y oscuro',
-            value: darkModeEnabled,
-            onChanged: (value) async {
-              await themeProvider.toggleTheme();
+            value: _darkModeEnabled,
+            onChanged: (value) {
+              setState(() {
+                _darkModeEnabled = value;
+                // Aquí implementarías el cambio real de tema
+              });
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.dark_mode,
           ),
@@ -57,9 +41,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingTile(
             title: 'Idioma',
             subtitle: 'Seleccionar idioma de la aplicación',
-            trailing: Text(selectedLanguage),
+            trailing: Text(_selectedLanguage),
             onTap: () {
-              _showLanguageSelector(context, languageProvider);
+              _showLanguageSelector();
             },
             icon: Icons.language,
           ),
@@ -71,21 +55,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingSwitch(
             title: 'Activar notificaciones',
             subtitle: 'Recibir alertas sobre tu inventario',
-            value: notificationsEnabled,
-            onChanged: (value) async {
-              await _preferencesService.setNotificationsEnabled(value);
-              
-              // Mostrar notificación de prueba si se activan
-              if (value) {
-                await _notificationService.showNotification(
-                  title: 'Notificaciones activadas',
-                  body: 'Recibirás alertas sobre tu inventario',
-                );
-              } else {
-                await _notificationService.cancelAllNotifications();
-              }
-              
-              setState(() {});
+            value: _notificationsEnabled,
+            onChanged: (value) {
+              setState(() {
+                _notificationsEnabled = value;
+              });
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.notifications,
           ),
@@ -96,19 +71,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSectionHeader('Datos'),
           _buildSettingTile(
             title: 'Exportar inventario',
-            subtitle: 'Exportar tus datos en diferentes formatos',
-            trailing: _isExporting ? const CircularProgressIndicator() : null,
-            onTap: _isExporting ? null : () async {
-              setState(() {
-                _isExporting = true;
-              });
-              
-              // Mostrar opciones de exportación
-              await _showExportOptions(context);
-              
-              setState(() {
-                _isExporting = false;
-              });
+            subtitle: 'Generar archivo CSV con tus datos',
+            onTap: () {
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.upload_file,
           ),
@@ -116,28 +81,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingTile(
             title: 'Importar datos',
             subtitle: 'Cargar inventario desde archivo',
-            trailing: _isImporting ? const CircularProgressIndicator() : null,
-            onTap: _isImporting ? null : () async {
-              setState(() {
-                _isImporting = true;
-              });
-              
-              // Importar desde JSON
-              final success = await _dataService.importInventoryFromJson();
-              
-              setState(() {
-                _isImporting = false;
-              });
-              
-              // Mostrar resultado
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(success 
-                      ? 'Datos importados correctamente' 
-                      : 'Error al importar datos'),
-                  backgroundColor: success ? Colors.green : Colors.red,
-                ),
-              );
+            onTap: () {
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.download,
           ),
@@ -145,28 +90,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingTile(
             title: 'Realizar copia de seguridad',
             subtitle: 'Guardar datos en la nube',
-            trailing: _isBackingUp ? const CircularProgressIndicator() : null,
-            onTap: _isBackingUp ? null : () async {
-              setState(() {
-                _isBackingUp = true;
-              });
-              
-              // Realizar copia de seguridad
-              final success = await _dataService.createBackup();
-              
-              setState(() {
-                _isBackingUp = false;
-              });
-              
-              // Mostrar resultado
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(success 
-                      ? 'Copia de seguridad realizada correctamente' 
-                      : 'Error al realizar copia de seguridad'),
-                  backgroundColor: success ? Colors.green : Colors.red,
-                ),
-              );
+            onTap: () {
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.backup,
           ),
@@ -178,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildSettingTile(
             title: 'Versión',
             subtitle: AppConfig.appVersion,
-            onTap: null,
+            onTap: () {},
             icon: Icons.info_outline,
           ),
           
@@ -186,7 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: 'Términos y condiciones',
             subtitle: 'Información legal',
             onTap: () {
-              _showTextDialog(context, 'Términos y Condiciones', AppConfig.termsAndConditions);
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.gavel,
           ),
@@ -195,7 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: 'Política de privacidad',
             subtitle: 'Uso de tus datos',
             onTap: () {
-              _showTextDialog(context, 'Política de Privacidad', AppConfig.privacyPolicy);
+              _showFeatureNotImplementedMessage();
             },
             icon: Icons.privacy_tip,
           ),
@@ -223,7 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required String title,
     required String subtitle,
     required IconData icon,
-    required VoidCallback? onTap,
+    required VoidCallback onTap,
     Widget? trailing,
   }) {
     return ListTile(
@@ -241,9 +166,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(subtitle),
-      trailing: trailing ?? (onTap != null ? const Icon(Icons.arrow_forward_ios, size: 16) : null),
+      trailing: trailing ?? const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
-      enabled: onTap != null,
     );
   }
   
@@ -277,202 +201,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
   
-  void _showLanguageSelector(BuildContext context, LanguageProvider provider) {
+  void _showLanguageSelector() {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
         title: const Text('Seleccionar idioma'),
-        children: provider.availableLanguages.map((language) {
-          return SimpleDialogOption(
-            onPressed: () {
-              provider.setLanguage(language);
-              Navigator.pop(context);
-              
-              // Mostrar mensaje de confirmación
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Idioma cambiado a $language'),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                children: [
-                  provider.currentLanguage == language
-                      ? const Icon(Icons.radio_button_checked, color: AppTheme.primaryColor)
-                      : const Icon(Icons.radio_button_unchecked),
-                  const SizedBox(width: 16),
-                  Text(language),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+        children: [
+          _buildLanguageOption('Español'),
+          _buildLanguageOption('English'),
+          _buildLanguageOption('Français'),
+          _buildLanguageOption('Deutsch'),
+        ],
       ),
     );
   }
   
-  // Método modificado _showExportOptions para manejar exportación en web
-Future<void> _showExportOptions(BuildContext context) async {
-  final option = await showDialog<String>(
-    context: context,
-    builder: (context) => SimpleDialog(
-      title: const Text('Exportar inventario'),
-      children: [
-        SimpleDialogOption(
-          onPressed: () => Navigator.pop(context, 'csv'),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Icon(Icons.table_chart, color: Colors.green),
-                SizedBox(width: 16),
-                Text('Exportar como CSV'),
-              ],
-            ),
-          ),
-        ),
-        SimpleDialogOption(
-          onPressed: () => Navigator.pop(context, 'json'),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Icon(Icons.code, color: Colors.blue),
-                SizedBox(width: 16),
-                Text('Exportar como JSON'),
-              ],
-            ),
-          ),
-        ),
-        SimpleDialogOption(
-          onPressed: () => Navigator.pop(context, 'excel'),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              children: [
-                Icon(Icons.grid_on, color: Colors.deepOrange),
-                SizedBox(width: 16),
-                Text('Exportar como Excel'),
-              ],
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-  
-  if (option == null) return;
-  
-  String? filePath;
-  bool isWebExport = false;
-  
-  if (option == 'csv') {
-    filePath = await _dataService.exportInventoryToCsv();
-  } else if (option == 'json') {
-    filePath = await _dataService.exportInventoryToJson();
-  } else if (option == 'excel') {
-    filePath = await _dataService.exportInventoryToExcel();
+  Widget _buildLanguageOption(String language) {
+    return SimpleDialogOption(
+      onPressed: () {
+        setState(() {
+          _selectedLanguage = language;
+        });
+        Navigator.pop(context);
+        _showFeatureNotImplementedMessage();
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Text(language),
+      ),
+    );
   }
   
-  // Comprobar si es una exportación web
-  isWebExport = filePath == 'web-export';
-  
-  // Mostrar resultado
-  if (mounted) {
-    if (isWebExport) {
-      // Mensaje específico para web
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('La exportación en web está limitada. Los datos se han generado pero no se pueden descargar automáticamente.'),
-          backgroundColor: Colors.orange,
-          duration: Duration(seconds: 5),
-        ),
-      );
-    } else {
-      // Mensaje normal para dispositivos nativos
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(filePath != null 
-              ? 'Archivo exportado correctamente' 
-              : 'Error al exportar archivo'),
-          backgroundColor: filePath != null ? Colors.green : Colors.red,
-        ),
-      );
-    }
-  }
-}
-  
-  void _showTextDialog(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Título
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: AppTheme.primaryColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(AppTheme.borderRadius),
-                  topRight: Radius.circular(AppTheme.borderRadius),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    title.contains('Términos') ? Icons.gavel : Icons.privacy_tip,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            // Contenido
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.6,
-              ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  content,
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-            ),
-            
-            // Botón de cerrar
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 48),
-                ),
-                child: const Text('Cerrar'),
-              ),
-            ),
-          ],
-        ),
+  void _showFeatureNotImplementedMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Esta función aún no está implementada'),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
       ),
     );
   }

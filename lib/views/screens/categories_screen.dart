@@ -304,7 +304,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddCategoryScreen()),
+                MaterialPageRoute(builder: (context) => const AddCategoryScreen()),
               ).then((result) {
                 if (result == true) {
                   _loadCategories();
